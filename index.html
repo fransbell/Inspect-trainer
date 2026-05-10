@@ -734,7 +734,7 @@ function init() {
       const map={a:0,b:1,c:2,d:3};
       if(map[e.key.toLowerCase()]!==undefined) {
         const opts=document.querySelectorAll('.qob:not(.dis)');
-        if(opts[map[e.key.toLowerCase()]]) opts[map[e.key.toLowerCase()].click();
+        if(opts[map[e.key.toLowerCase()]]) opts[map[e.key.toLowerCase()]].click();
       }
     }
     if(e.key==='Enter') $('btn-next').click();
@@ -848,6 +848,8 @@ function renderQuestion() {
   q.options.forEach((opt,i) => {
     const btn = document.createElement('button');
     btn.className = 'qob';
+    btn.dataset.idx = i;
+    btn.dataset.isCorrect = opt === q.correctDesc ? '1' : '0';
     btn.innerHTML = `<span class="okk">${keys[i]}</span>${opt}`;
     btn.addEventListener('click', () => handleAnswer(opt, btn));
     $('qo').appendChild(btn);
@@ -859,25 +861,13 @@ function handleAnswer(selected, btnEl) {
   const q = S.question;
   const isCorrect = selected === q.correctDesc;
 
+  // Disable all and mark correct answer
   document.querySelectorAll('.qob').forEach(btn => {
     btn.classList.add('dis');
-    if(btn.textContent.includes(q.correctDesc) || btn.innerHTML.includes(q.correctDesc.substring(0,30))) {
-      // Mark correct option
-    }
-  });
-
-  // Find and mark correct
-  document.querySelectorAll('.qob').forEach(btn => {
-    const text = btn.textContent.substring(1); // remove key letter
-    if(text === q.correctDesc) btn.classList.add('ok');
+    if(btn.dataset.isCorrect === '1') btn.classList.add('ok');
   });
 
   if(!isCorrect) btnEl.classList.add('no');
-  else {
-    // Also mark the selected one correct if it matches
-    const text = btnEl.textContent.substring(1);
-    if(text === q.correctDesc) btnEl.classList.add('ok');
-  }
 
   if(isCorrect) {
     S.score++; S.streak++; if(S.streak>S.best) S.best=S.streak;
@@ -898,8 +888,7 @@ function handleTimeout() {
   const q = S.question;
   document.querySelectorAll('.qob').forEach(btn => {
     btn.classList.add('dis');
-    const text = btn.textContent.substring(1);
-    if(text === q.correctDesc) btn.classList.add('ok');
+    if(btn.dataset.isCorrect === '1') btn.classList.add('ok');
   });
   S.streak=0;
   S.results.push({ round:S.round, build:S.build.name, skillName:q.name, slot:q.slot, correct:false, userDesc:'(Time out)', correctDesc:q.correctDesc.substring(0,60) });
