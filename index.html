@@ -15,67 +15,68 @@
       --green: #22c55e; --green-dim: #166534;
       --red: #ef4444; --red-dim: #991b1b;
       --purple: #a855f7; --orange: #f97316; --cyan: #06b6d4;
+      --slot-bg: rgba(30,42,66,.85);
     }
     * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
     body { font-family:system-ui,-apple-system,sans-serif; background:var(--bg); color:var(--t1); min-height:100dvh; overflow-x:hidden; }
     body::before { content:''; position:fixed; inset:0; background:radial-gradient(ellipse at 20% 50%,rgba(74,125,255,.06) 0%,transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(168,85,247,.05) 0%,transparent 50%); pointer-events:none; z-index:0; }
-    .app { position:relative; z-index:1; max-width:500px; margin:0 auto; padding:8px; min-height:100dvh; }
+    .app { position:relative; z-index:1; max-width:420px; margin:0 auto; padding:6px; min-height:100dvh; }
     .screen { display:none; } .screen.active { display:block; }
 
     /* Header */
-    .hdr { text-align:center; padding:12px 0 8px; border-bottom:1px solid var(--border); margin-bottom:8px; }
-    .hdr h1 { font-size:1.2rem; font-weight:900; background:linear-gradient(135deg,var(--gold),#ffd700,var(--gold)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; letter-spacing:2px; text-transform:uppercase; }
-    .hdr .sub { color:var(--t3); font-size:.65rem; } .hdr .sub a { color:var(--blue); text-decoration:none; }
+    .hdr { text-align:center; padding:8px 0 6px; border-bottom:1px solid var(--border); margin-bottom:6px; }
+    .hdr h1 { font-size:1rem; font-weight:900; background:linear-gradient(135deg,var(--gold),#ffd700,var(--gold)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; letter-spacing:2px; text-transform:uppercase; }
+    .hdr .sub { color:var(--t3); font-size:.55rem; } .hdr .sub a { color:var(--blue); text-decoration:none; }
 
     /* Config */
-    .cfg { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:16px; margin:12px auto; }
-    .cfg h2 { font-size:1rem; color:var(--gold); margin-bottom:12px; text-align:center; }
-    .cg { margin-bottom:14px; }
-    .cg label { display:block; font-size:.7rem; font-weight:600; color:var(--t2); text-transform:uppercase; letter-spacing:1px; margin-bottom:4px; }
-    .cg .hint { font-size:.6rem; color:var(--t3); margin-top:2px; text-transform:none; letter-spacing:0; }
+    .cfg { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:14px; margin:10px auto; }
+    .cfg h2 { font-size:.9rem; color:var(--gold); margin-bottom:10px; text-align:center; }
+    .cg { margin-bottom:12px; }
+    .cg label { display:block; font-size:.65rem; font-weight:600; color:var(--t2); text-transform:uppercase; letter-spacing:1px; margin-bottom:3px; }
+    .cg .hint { font-size:.55rem; color:var(--t3); margin-top:2px; text-transform:none; letter-spacing:0; }
     .cg input[type=range] { width:100%; height:5px; -webkit-appearance:none; appearance:none; background:var(--border); border-radius:3px; outline:none; }
     .cg input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:18px; height:18px; border-radius:50%; background:var(--gold); cursor:pointer; box-shadow:0 0 8px rgba(240,184,64,.4); }
     .crow { display:flex; align-items:center; gap:8px; }
     .crow input[type=range] { flex:1; }
     .cval { background:var(--bg); border:1px solid var(--border); border-radius:4px; padding:2px 8px; font-weight:700; color:var(--gold); font-size:.85rem; min-width:32px; text-align:center; }
-    .csel { width:100%; padding:8px; background:var(--bg); border:1px solid var(--border); border-radius:6px; color:var(--t1); font-size:.85rem; outline:none; }
+    .csel { width:100%; padding:7px; background:var(--bg); border:1px solid var(--border); border-radius:6px; color:var(--t1); font-size:.8rem; outline:none; }
 
     /* Buttons */
-    .btn { display:inline-flex; align-items:center; justify-content:center; gap:6px; padding:10px 20px; border:none; border-radius:8px; font-size:.85rem; font-weight:700; cursor:pointer; transition:all .2s; text-transform:uppercase; letter-spacing:1px; }
+    .btn { display:inline-flex; align-items:center; justify-content:center; gap:6px; padding:9px 18px; border:none; border-radius:8px; font-size:.8rem; font-weight:700; cursor:pointer; transition:all .2s; text-transform:uppercase; letter-spacing:1px; }
     .btn-p { background:linear-gradient(135deg,var(--gold),#ffd700); color:#1a1000; box-shadow:0 4px 16px rgba(240,184,64,.3); }
     .btn-p:hover { transform:translateY(-1px); box-shadow:0 6px 24px rgba(240,184,64,.5); }
     .btn-s { background:var(--card); border:1px solid var(--border); color:var(--t1); }
     .btn-s:hover { border-color:var(--blue); }
-    .btn-d { background:rgba(239,68,68,.15); border:1px solid var(--red); color:var(--red); padding:6px 10px; font-size:.7rem; }
+    .btn-d { background:rgba(239,68,68,.15); border:1px solid var(--red); color:var(--red); padding:5px 9px; font-size:.65rem; }
     .btn-g { background:linear-gradient(135deg,var(--green),#16a34a); color:#fff; }
     .btn:disabled { opacity:.5; cursor:not-allowed; }
 
     /* Training top bar */
-    .tbar { display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:var(--card); border:1px solid var(--border); border-radius:8px; margin-bottom:6px; }
-    .tstats { display:flex; gap:16px; }
+    .tbar { display:flex; justify-content:space-between; align-items:center; padding:6px 10px; background:var(--card); border:1px solid var(--border); border-radius:8px; margin-bottom:4px; }
+    .tstats { display:flex; gap:14px; }
     .si { text-align:center; }
-    .si .sl { font-size:.55rem; text-transform:uppercase; letter-spacing:1px; color:var(--t3); }
-    .si .sv { font-size:1.1rem; font-weight:700; }
+    .si .sl { font-size:.5rem; text-transform:uppercase; letter-spacing:1px; color:var(--t3); }
+    .si .sv { font-size:1rem; font-weight:700; }
     .sv.sc { color:var(--gold); } .sv.rn { color:var(--blue); } .sv.sk { color:var(--green); }
 
     /* Timer */
-    .tbc { width:100%; height:6px; background:var(--border); border-radius:3px; margin-bottom:6px; overflow:hidden; }
+    .tbc { width:100%; height:5px; background:var(--border); border-radius:3px; margin-bottom:4px; overflow:hidden; }
     .tb { height:100%; border-radius:3px; transition:width .1s linear; background:linear-gradient(90deg,var(--green),var(--gold),var(--red)); }
     .tb.urg { animation:pb .5s ease-in-out infinite; }
     @keyframes pb { 0%,100%{opacity:1} 50%{opacity:.6} }
 
     /* Phase */
-    .phase { text-align:center; margin-bottom:6px; padding:8px; border-radius:8px; font-size:.8rem; font-weight:600; text-transform:uppercase; letter-spacing:2px; }
+    .phase { text-align:center; margin-bottom:4px; padding:6px; border-radius:6px; font-size:.7rem; font-weight:600; text-transform:uppercase; letter-spacing:2px; }
     .ph-m { background:rgba(74,125,255,.15); border:1px solid var(--blue); color:var(--blue); }
     .ph-a { background:rgba(240,184,64,.15); border:1px solid var(--gold); color:var(--gold); }
     .ph-c { background:rgba(34,197,94,.15); border:1px solid var(--green); color:var(--green); }
     .ph-w { background:rgba(239,68,68,.15); border:1px solid var(--red); color:var(--red); }
 
-    /* Build Card - Compact */
-    .bc { background:var(--card); border:1px solid var(--border); border-radius:10px; overflow:hidden; margin-bottom:6px; }
-    .bc-top { padding:8px 10px; background:linear-gradient(135deg,rgba(74,125,255,.15),rgba(168,85,247,.15)); border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
-    .bc-top h3 { font-size:.8rem; font-weight:700; display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
-    .bc-ct { font-size:.6rem; padding:2px 8px; border-radius:12px; font-weight:600; text-transform:uppercase; letter-spacing:1px; }
+    /* ====== INSPECTION GRID (in-game style) ====== */
+    .bc { background:var(--card); border:1px solid var(--border); border-radius:8px; overflow:hidden; margin-bottom:4px; }
+    .bc-top { padding:6px 10px; background:linear-gradient(135deg,rgba(74,125,255,.15),rgba(168,85,247,.15)); border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+    .bc-top h3 { font-size:.75rem; font-weight:700; display:flex; align-items:center; gap:5px; flex-wrap:wrap; }
+    .bc-ct { font-size:.55rem; padding:2px 7px; border-radius:10px; font-weight:600; text-transform:uppercase; letter-spacing:1px; }
     .ct-sp { background:rgba(239,68,68,.2); color:var(--red); border:1px solid var(--red-dim); }
     .ct-gp { background:rgba(34,197,94,.2); color:var(--green); border:1px solid var(--green-dim); }
     .ct-spv { background:rgba(74,125,255,.2); color:var(--blue); border:1px solid var(--blue-dim); }
@@ -88,88 +89,84 @@
     .ct-av { background:rgba(6,182,212,.2); color:var(--cyan); border:1px solid rgba(6,182,212,.3); }
     .ct-ow { background:rgba(34,197,94,.2); color:var(--green); border:1px solid var(--green-dim); }
 
-    /* Gear rows with game images */
-    .bsec { padding:8px 10px; border-bottom:1px solid var(--border); }
-    .bsec:last-child { border-bottom:none; }
-    .bsec-t { font-size:.55rem; text-transform:uppercase; letter-spacing:1.5px; color:var(--t3); margin-bottom:4px; font-weight:600; }
-    .gr { display:flex; align-items:center; gap:6px; padding:3px 0; }
-    .gi { width:32px; height:32px; border-radius:6px; overflow:hidden; flex-shrink:0; background:var(--bg); display:flex; align-items:center; justify-content:center; }
-    .gi img { width:100%; height:100%; object-fit:contain; image-rendering:pixelated; }
-    .gi.wpn { background:rgba(239,68,68,.12); } .gi.hd { background:rgba(74,125,255,.12); }
-    .gi.ch { background:rgba(34,197,94,.12); } .gi.sh { background:rgba(168,85,247,.12); }
-    .gi.cp { background:rgba(240,184,64,.12); } .gi.pt { background:rgba(6,182,212,.12); }
-    .gi.mt { background:rgba(249,115,22,.12); } .gi.fd { background:rgba(251,146,60,.12); }
-    .ginfo { flex:1; min-width:0; }
-    .gn { font-weight:600; font-size:.78rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    .gd { font-size:.6rem; color:var(--t2); }
-    .rng { display:inline-flex; align-items:center; gap:4px; padding:2px 8px; border-radius:10px; font-size:.65rem; font-weight:600; }
+    /* 3x3 Inspection Grid */
+    .insp-grid {
+      display: flex; justify-content: center;
+      padding: 8px 4px 12px; gap: 0;
+    }
+    .insp-col { display:flex; flex-direction:column; }
+    .insp-col-lr { margin-top: 18px; }
+    .insp-slot {
+      position: relative; width: 90px; height: 90px;
+    }
+    .insp-slot img.item-img {
+      width: 90px; height: 90px; object-fit: contain;
+      image-rendering: auto;
+    }
+    /* Empty slot X icon */
+    .insp-slot.empty {
+      display:flex; align-items:center; justify-content:center;
+      background: var(--slot-bg); border: 1px solid var(--border); border-radius: 4px;
+    }
+    .insp-slot.empty svg { opacity: .3; }
+
+    /* Skill circles overlaid at bottom of slot */
+    .sk-overlay {
+      position: absolute; bottom: -6px; left: 0; right: 0;
+      display: flex; flex-direction: row; justify-content: center;
+      gap: 0; width: 100%;
+    }
+    .sk-circle {
+      width: 28px; height: 28px; border-radius: 50%;
+      overflow: hidden; border: 2px solid var(--card);
+      box-shadow: 0 1px 4px rgba(0,0,0,.5);
+      position: relative; z-index: 3;
+    }
+    .sk-circle + .sk-circle {
+      margin-left: -4px; z-index: 2;
+    }
+    .sk-circle + .sk-circle + .sk-circle {
+      margin-left: -4px; z-index: 1;
+    }
+    .sk-circle img {
+      width: 100%; height: 100%; object-fit: contain; image-rendering: auto;
+    }
+    /* Skill slot indicator border colors */
+    .sk-circle.sk-q { border-color: var(--blue); }
+    .sk-circle.sk-w { border-color: var(--purple); }
+    .sk-circle.sk-e { border-color: var(--gold); }
+    .sk-circle.sk-p { border-color: var(--green); }
+
+    /* Item label below slot */
+    .slot-label {
+      font-size: .45rem; text-align:center; color:var(--t2);
+      margin-top: 2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+      max-width: 90px; line-height: 1.1;
+    }
+
+    /* Consumables row below grid */
+    .cons-row {
+      display: flex; justify-content: center; gap: 10px;
+      padding: 4px 10px 8px; border-top: 1px solid var(--border);
+    }
+    .cons-item { text-align: center; }
+    .cons-item img {
+      width: 40px; height: 40px; object-fit: contain; image-rendering: auto;
+    }
+    .cons-label {
+      font-size: .4rem; color: var(--t2); margin-top: 1px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      max-width: 50px;
+    }
+
+    /* Range badge in top bar */
+    .rng { display:inline-flex; align-items:center; gap:3px; padding:1px 6px; border-radius:8px; font-size:.55rem; font-weight:600; }
     .rng-m { background:rgba(239,68,68,.15); color:var(--red); border:1px solid rgba(239,68,68,.3); }
     .rng-md { background:rgba(240,184,64,.15); color:var(--gold); border:1px solid var(--gold-dim); }
     .rng-r { background:rgba(74,125,255,.15); color:var(--blue); border:1px solid rgba(74,125,255,.3); }
 
-    /* Skills row with spell icons */
-    .sk-row { display:flex; gap:4px; margin-top:4px; }
-    .sk { flex:1; padding:4px 6px; border-radius:6px; text-align:center; min-width:0; }
-    .sk-q { background:rgba(74,125,255,.08); border:1px solid rgba(74,125,255,.25); }
-    .sk-w { background:rgba(168,85,247,.08); border:1px solid rgba(168,85,247,.25); }
-    .sk-e { background:rgba(240,184,64,.08); border:1px solid rgba(240,184,64,.25); }
-    .sk-p { background:rgba(34,197,94,.08); border:1px solid rgba(34,197,94,.25); }
-    .sk-k { font-size:.5rem; text-transform:uppercase; letter-spacing:1px; font-weight:700; margin-bottom:2px; }
-    .sk-q .sk-k { color:var(--blue); } .sk-w .sk-k { color:var(--purple); }
-    .sk-e .sk-k { color:var(--gold); } .sk-p .sk-k { color:var(--green); }
-    .sk-ic { width:24px; height:24px; margin:0 auto 2px; border-radius:4px; overflow:hidden; }
-    .sk-ic img { width:100%; height:100%; object-fit:contain; image-rendering:pixelated; }
-    .sk-n { font-weight:600; font-size:.65rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-
-    /* Hidden state */
-    .bc.hid .gn, .bc.hid .sk-n, .bc.hid .gd { color:transparent; background:var(--border); border-radius:3px; user-select:none; }
-    .bc.hid .rng { color:transparent; background:var(--border); border-color:var(--border); }
-    .bc.hid .sk-ic img { opacity:0; }
-
-    /* Quiz */
-    .qp { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:14px; margin-bottom:8px; }
-    .qq { font-size:.85rem; font-weight:600; margin-bottom:12px; color:var(--gold); line-height:1.4; }
-    .qq .qskill { display:inline-flex; align-items:center; gap:4px; background:rgba(74,125,255,.15); border:1px solid rgba(74,125,255,.3); border-radius:6px; padding:2px 8px; color:var(--blue); font-weight:700; }
-    .qq .qskill img { width:18px; height:18px; border-radius:3px; object-fit:contain; image-rendering:pixelated; }
-    .qo { display:grid; grid-template-columns:1fr; gap:8px; margin-bottom:12px; }
-    .qob { padding:10px 12px; background:var(--bg); border:2px solid var(--border); border-radius:8px; cursor:pointer; transition:all .2s; font-size:.78rem; font-weight:500; text-align:left; line-height:1.3; }
-    .qob:hover:not(.dis) { border-color:var(--blue); background:rgba(74,125,255,.06); }
-    .qob.sel { border-color:var(--blue); background:rgba(74,125,255,.12); }
-    .qob.ok { border-color:var(--green)!important; background:rgba(34,197,94,.12)!important; color:var(--green); }
-    .qob.no { border-color:var(--red)!important; background:rgba(239,68,68,.12)!important; color:var(--red); }
-    .qob.dis { cursor:not-allowed; opacity:.5; }
-    .qob .okk { display:inline-block; width:20px; height:20px; line-height:20px; text-align:center; background:var(--border); border-radius:4px; font-size:.65rem; font-weight:700; margin-right:6px; }
-    .qob.ok .okk { background:var(--green); color:#fff; }
-    .qob.no .okk { background:var(--red); color:#fff; }
-
-    /* Results */
-    .rp { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:20px; margin:16px auto; text-align:center; }
-    .rp-title { font-size:1.3rem; font-weight:900; margin-bottom:4px; }
-    .rp-grade { font-size:3.5rem; font-weight:900; margin:12px 0; font-family:system-ui; }
-    .gs { color:var(--gold); text-shadow:0 0 20px rgba(240,184,64,.5); }
-    .ga { color:var(--green); } .gb { color:var(--blue); } .gc { color:var(--orange); } .gdg { color:var(--red); }
-    .rs { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:16px 0; }
-    .rsi { padding:12px 8px; background:var(--bg); border-radius:8px; border:1px solid var(--border); }
-    .rsi .rv { font-size:1.5rem; font-weight:700; }
-    .rsi .rl { font-size:.6rem; color:var(--t3); text-transform:uppercase; letter-spacing:1px; margin-top:2px; }
-    .rb { text-align:left; margin-top:16px; max-height:40vh; overflow-y:auto; }
-    .rb h4 { font-size:.7rem; text-transform:uppercase; letter-spacing:1px; color:var(--t3); margin-bottom:8px; }
-    .bi { display:flex; align-items:center; gap:8px; padding:8px; background:var(--bg); border-radius:6px; margin-bottom:4px; border:1px solid var(--border); }
-    .bic { width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:.7rem; font-weight:700; flex-shrink:0; }
-    .bic.cic { background:rgba(34,197,94,.2); color:var(--green); }
-    .bic.wic { background:rgba(239,68,68,.2); color:var(--red); }
-    .bit { flex:1; min-width:0; }
-    .biq { font-size:.7rem; font-weight:500; } .bia { font-size:.6rem; color:var(--t2); margin-top:1px; }
-    .ra { display:flex; gap:10px; justify-content:center; margin-top:16px; }
-
-    /* Countdown */
-    .cov { position:fixed; inset:0; background:rgba(10,14,23,.9); display:none; align-items:center; justify-content:center; z-index:100; }
-    .cov.act { display:flex; }
-    .cn { font-size:6rem; font-weight:900; color:var(--gold); text-shadow:0 0 40px rgba(240,184,64,.5); animation:cp 1s ease-in-out; }
-    @keyframes cp { 0%{transform:scale(1.5);opacity:0} 50%{transform:scale(1);opacity:1} 100%{transform:scale(.9);opacity:.8} }
-
     /* Tree badge */
-    .tb { display:inline-block; padding:1px 6px; border-radius:3px; font-size:.55rem; font-weight:700; text-transform:uppercase; letter-spacing:.5px; }
+    .tb { display:inline-block; padding:1px 5px; border-radius:3px; font-size:.5rem; font-weight:700; text-transform:uppercase; letter-spacing:.5px; }
     .tb-sword{background:rgba(239,68,68,.15);color:#f87171} .tb-axe{background:rgba(249,115,22,.15);color:#fb923c}
     .tb-mace{background:rgba(74,125,255,.15);color:#60a5fa} .tb-dagger{background:rgba(168,85,247,.15);color:#c084fc}
     .tb-qs{background:rgba(239,68,68,.15);color:#f87171} .tb-spear{background:rgba(34,197,94,.15);color:#4ade80}
@@ -178,11 +175,59 @@
     .tb-arcane{background:rgba(168,85,247,.15);color:#c084fc} .tb-cursed{background:rgba(168,85,247,.15);color:#a78bfa}
     .tb-bow{background:rgba(34,197,94,.15);color:#4ade80} .tb-crossbow{background:rgba(74,125,255,.15);color:#60a5fa}
 
+    /* Hidden state - blur/redact names and skill icons */
+    .bc.hid .slot-label { color:transparent; background:var(--border); border-radius:2px; }
+    .bc.hid .cons-label { color:transparent; background:var(--border); border-radius:2px; }
+    .bc.hid .sk-circle img { opacity:0; }
+    .bc.hid .bc-top h3 { color:transparent; background:var(--border); border-radius:3px; }
+
+    /* Quiz */
+    .qp { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:12px; margin-bottom:6px; }
+    .qq { font-size:.8rem; font-weight:600; margin-bottom:10px; color:var(--gold); line-height:1.4; }
+    .qq .qskill { display:inline-flex; align-items:center; gap:4px; background:rgba(74,125,255,.15); border:1px solid rgba(74,125,255,.3); border-radius:6px; padding:2px 8px; color:var(--blue); font-weight:700; }
+    .qq .qskill img { width:18px; height:18px; border-radius:3px; object-fit:contain; image-rendering:auto; }
+    .qo { display:grid; grid-template-columns:1fr; gap:6px; margin-bottom:10px; }
+    .qob { padding:9px 10px; background:var(--bg); border:2px solid var(--border); border-radius:8px; cursor:pointer; transition:all .2s; font-size:.75rem; font-weight:500; text-align:left; line-height:1.3; color:var(--t1); }
+    .qob:hover:not(.dis) { border-color:var(--blue); background:rgba(74,125,255,.06); }
+    .qob.sel { border-color:var(--blue); background:rgba(74,125,255,.12); }
+    .qob.ok { border-color:var(--green)!important; background:rgba(34,197,94,.12)!important; color:var(--green); }
+    .qob.no { border-color:var(--red)!important; background:rgba(239,68,68,.12)!important; color:var(--red); }
+    .qob.dis { cursor:not-allowed; opacity:.5; }
+    .qob .okk { display:inline-block; width:18px; height:18px; line-height:18px; text-align:center; background:var(--border); border-radius:4px; font-size:.6rem; font-weight:700; margin-right:5px; }
+    .qob.ok .okk { background:var(--green); color:#fff; }
+    .qob.no .okk { background:var(--red); color:#fff; }
+
+    /* Results */
+    .rp { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:16px; margin:12px auto; text-align:center; }
+    .rp-title { font-size:1.2rem; font-weight:900; margin-bottom:4px; }
+    .rp-grade { font-size:3rem; font-weight:900; margin:10px 0; font-family:system-ui; }
+    .gs { color:var(--gold); text-shadow:0 0 20px rgba(240,184,64,.5); }
+    .ga { color:var(--green); } .gb { color:var(--blue); } .gc { color:var(--orange); } .gdg { color:var(--red); }
+    .rs { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin:12px 0; }
+    .rsi { padding:10px 6px; background:var(--bg); border-radius:8px; border:1px solid var(--border); }
+    .rsi .rv { font-size:1.3rem; font-weight:700; }
+    .rsi .rl { font-size:.5rem; color:var(--t3); text-transform:uppercase; letter-spacing:1px; margin-top:2px; }
+    .rb { text-align:left; margin-top:14px; max-height:40vh; overflow-y:auto; }
+    .rb h4 { font-size:.65rem; text-transform:uppercase; letter-spacing:1px; color:var(--t3); margin-bottom:6px; }
+    .bi { display:flex; align-items:center; gap:6px; padding:6px; background:var(--bg); border-radius:6px; margin-bottom:3px; border:1px solid var(--border); }
+    .bic { width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:.65rem; font-weight:700; flex-shrink:0; }
+    .bic.cic { background:rgba(34,197,94,.2); color:var(--green); }
+    .bic.wic { background:rgba(239,68,68,.2); color:var(--red); }
+    .bit { flex:1; min-width:0; }
+    .biq { font-size:.65rem; font-weight:500; } .bia { font-size:.55rem; color:var(--t2); margin-top:1px; }
+    .ra { display:flex; gap:8px; justify-content:center; margin-top:14px; }
+
+    /* Countdown */
+    .cov { position:fixed; inset:0; background:rgba(10,14,23,.9); display:none; align-items:center; justify-content:center; z-index:100; }
+    .cov.act { display:flex; }
+    .cn { font-size:5rem; font-weight:900; color:var(--gold); text-shadow:0 0 40px rgba(240,184,64,.5); animation:cp 1s ease-in-out; }
+    @keyframes cp { 0%{transform:scale(1.5);opacity:0} 50%{transform:scale(1);opacity:1} 100%{transform:scale(.9);opacity:.8} }
+
     .fade-in { animation:fi .3s ease; }
     @keyframes fi { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
 
     /* Scrollbar */
-    ::-webkit-scrollbar { width:4px; } ::-webkit-scrollbar-track { background:var(--bg); }
+    ::-webkit-scrollbar { width:3px; } ::-webkit-scrollbar-track { background:var(--bg); }
     ::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
   </style>
 </head>
@@ -220,7 +265,7 @@
           <option value="hard">Hard &mdash; 4 choices, similar skills</option>
         </select>
       </div>
-      <div style="text-align:center;margin-top:16px;">
+      <div style="text-align:center;margin-top:14px;">
         <button class="btn btn-p" id="btn-start" style="width:100%">Start Training</button>
       </div>
     </div>
@@ -261,7 +306,7 @@ const R_BASE = 'https://render.albiononline.com/v1';
 function itemImg(id) { return `${R_BASE}/item/${encodeURIComponent(id)}.png?locale=en`; }
 function spellImg(name) { return `${R_BASE}/spell/${encodeURIComponent(name)}.png?locale=en`; }
 
-// Item IDs for render API (T5/Adept's format for consistent icons)
+// Item IDs for render API
 const ITEM_IDS = {
   'Bloodmoon Staff': "Adept's Bloodmoon Staff",
   'Battleaxe': "Adept's Battleaxe",
@@ -303,7 +348,6 @@ const ITEM_IDS = {
   'Brimstone Staff': "Adept's Brimstone Staff",
   'Halberd': "Adept's Halberd",
   'Black Monk Staff': "Adept's Black Monk Staff",
-  // Armor
   'Cultist Cowl': "Adept's Cultist Cowl",
   'Hunter Hood': "Adept's Hunter Hood",
   'Scholar Cowl': "Adept's Scholar Cowl",
@@ -324,33 +368,28 @@ const ITEM_IDS = {
   'Mage Sandals': "Adept's Mage Sandals",
   'Assassin Shoes': "Adept's Assassin Shoes",
   'Knight Boots': "Adept's Knight Boots",
-  // Capes
   'Thetford Cape': "Adept's Thetford Cape",
   'Bridgewatch Cape': "Adept's Bridgewatch Cape",
   'Lymhurst Cape': "Adept's Lymhurst Cape",
   'Martlock Cape': "Adept's Martlock Cape",
   'Fort Sterling Cape': "Adept's Fort Sterling Cape",
-  // Potions
   'Energy Potion': "T5_POTION_ENERGY",
   'Resistance Potion': "T5_POTION_RESIST",
   'Healing Potion': "T5_POTION_HEAL",
   'Poison Potion': "T5_POTION_POISON",
-  // Mounts
   'Swiftclaw': "T5_MOUNT_SWIFTCLAW",
   'Riding Horse': "T2_MOUNT_HORSE",
   'Swamp Salamander': "T5_MOUNT_SWAMP_SALAMANDER",
   'Grizzly Bear': "T5_MOUNT_BEAR",
   'Armored Horse': "T3_MOUNT_ARMORED_HORSE",
   'Mule': "T2_MOUNT_OX",
-  // Food
   'Beef Stew': "T5_MEAL_STEW",
   'Braised Liver': "T5_MEAL_LIVER",
   'Pie': "T5_MEAL_PIE",
 };
 
-// ===== SKILL DESCRIPTIONS DATABASE =====
+// ===== SKILL DESCRIPTIONS =====
 const SKILL_DESC = {
-  // Nature Staff tree
   'Rejuvenation': 'Applies a heal-over-time charge to the target ally, restoring health over 8s and stacking up to 3 times',
   'Thorn Growth': 'Conjures a damaging thorn area at the targeted position that deals magical damage every 0.5s and slows enemies inside',
   'Thorn Slash': 'Slashes with thorny vines dealing magical damage and applying a slow to the enemy target',
@@ -370,8 +409,6 @@ const SKILL_DESC = {
   'Pestilence': 'Passive: Auto-attacks apply a poison that deals damage over time',
   'Bloodmoon': 'Transforms the caster into a powerful bloodmoon form, granting new abilities and increased damage',
   'Prowling': 'Grants stealth and increased movement speed',
-
-  // Axe tree
   'Rending Strike': 'Strikes the target enemy dealing physical damage and applying a bleed effect that deals damage over time',
   'Raging Slash': 'Slashes in a wide arc dealing physical damage and applying bleed to all enemies hit',
   'Rending Spin': 'Spins with the axe, dealing physical damage based on distance and applying bleed charges to all enemies hit',
@@ -382,8 +419,6 @@ const SKILL_DESC = {
   'Whirlwind': 'Spins rapidly dealing physical damage to all nearby enemies',
   'Gravitas': 'Slams the ground dealing massive AoE damage and pulling enemies toward the center',
   'Raging Frenzy': 'Passive: Each auto-attack increases attack speed, stacking up to a maximum',
-
-  // Sword tree
   'Heroic Cleave': 'Cleaves in a wide arc, dealing physical damage to all enemies in front of the caster',
   'Cleaving Strike': 'Strikes in a wide arc hitting multiple enemies in front, dealing physical damage',
   'Heroic Strike': 'Delivers a powerful strike to the target dealing physical damage',
@@ -401,8 +436,6 @@ const SKILL_DESC = {
   'Swordsmanship': 'Passive: Auto-attacks build stacks that increase damage dealt',
   'Weakening': 'Passive: Auto-attacks reduce the target damage output',
   'Heroic Fighting': 'Passive: Dealing damage increases move speed briefly',
-
-  // Dagger tree
   'Sunder Armor': 'Stabs the target dealing physical damage and reducing their damage resistances, stacking up to 3 times',
   'Slashing Strike': 'Slashes the target with both daggers, dealing physical damage',
   'Rushing Dash': 'Dashes toward the target position, dealing physical damage and gaining a damage buff',
@@ -417,54 +450,38 @@ const SKILL_DESC = {
   'Bloodletter': 'Stabs the target dealing physical damage based on their missing health, executing low-health enemies',
   'Deathgiver': 'Teleports behind the target and deals massive physical damage; resets cooldown on kill or assist',
   'Bloodthirsty Blade': 'Enters a bloodthirsty state, gaining bonus damage on auto-attacks and lifesteal but taking self-damage over time',
-  'Ambush': 'Passive: Entering stealth increases your next attack damage',
   'Deep Cuts': 'Passive: Every few auto-attacks inflicts a bleed dealing physical damage over time',
   'Life Leech': 'Passive: Auto-attacks steal a portion of the health the enemy has lost',
-
-  // Quarterstaff tree
   'High Kick': 'Delivers a high kick to the target dealing physical damage and knocking them back',
   'Staff Strike': 'Strikes with the staff dealing physical damage and reducing the target damage output',
   'Punching Bag': 'Unleashes a flurry of punches dealing physical damage to the target',
   'Rooting Bash': 'Bashes the target dealing physical damage and rooting them in place',
   'Unstoppable Charge': 'Charges forward, becoming immune to CC and dealing damage to enemies in the path',
-  'Iron Will': 'Enters a defensive stance, greatly reducing damage taken and reflecting damage back',
   'Black Monk Kick': 'Delivers a devastating flying kick that deals massive physical damage and knocks the target back',
   'Might': 'Passive: Successfully hitting enemies increases your physical damage',
-
-  // Mace tree
   'Smite': 'Strikes the target with holy energy dealing physical damage',
   'Provoke': 'Taunts nearby enemies forcing them to attack you, and increases your damage resistances',
   'Sprint': 'Passive: Moving increases move speed, building up to a sprint',
-
-  // Spear tree
   'Spear Stab': 'Thrusts the spear at the target dealing physical damage at extended melee range',
   'Spear Hook': 'Hooks the target enemy and pulls them toward you, dealing physical damage',
   'Vault': 'Leaps over the target, dealing physical damage and gaining a brief move speed boost',
   'Halberd Swing': 'Swings the halberd in a wide arc, dealing physical damage to all enemies in front',
-
-  // Fire tree
   'Fireball': 'Hurls a fireball at the target dealing magical damage in an area on impact',
   'Flame Pillar': 'Summons a pillar of flame at the target location, dealing magical damage to enemies inside',
   'Meteor': 'Calls down a meteor at the target location, dealing massive magical damage after a delay',
   'Explosive Staff': 'Fires an explosive projectile that detonates on impact dealing magical damage in an area',
   'Brimstone': 'Passive: Hitting enemies with fire abilities builds brimstone stacks that increase magical damage',
-
-  // Frost tree
   'Frost Bolt': 'Launches a frost bolt at the target dealing magical damage and applying a slow',
   'Ice Storm': 'Summons a blizzard at the target location, dealing magical damage and slowing all enemies inside',
   'Deep Freeze': 'Freezes the target enemy solid, dealing magical damage and stunning them for a duration',
   'Frozen Helix': 'Launches a spiral of ice that deals magical damage and slows enemies in its path',
   'Frostbite': 'Passive: Frost abilities apply frostbite stacks that slow enemies and increase frost damage taken',
-
-  // Arcane tree
   'Arcane Cursee': 'Curses the target with arcane energy dealing magical damage and debuffing them',
   'Debuff': 'Applies an arcane debuff to the target, reducing their damage output and resistances',
   'Immutable Curse': 'Places an unbreakable curse on the target, dealing damage and reducing their effectiveness',
   'Gravity': 'Creates a gravity well that pulls enemies toward the center and slows them',
   'Rune of Earth': 'Places a protective rune that increases damage resistances of nearby allies',
   'Arcane Empowerment': 'Passive: Casting spells empowers the next spell, increasing its damage',
-
-  // Cursed tree
   'Vile Curse': 'Curses the target dealing magical damage and applying a damage-over-time effect that stacks up to 4 times',
   'Cursed Sickle': 'Launches a sickle projectile that pierces through enemies and returns, applying Vile Curse charges',
   'Cursed Tar': 'Creates a tar puddle that slows enemies and applies Vile Curse damage-over-time',
@@ -478,8 +495,6 @@ const SKILL_DESC = {
   'Death Curse': 'Places a delayed explosive curse on the target dealing damage based on Vile Curse charges',
   'Bane': 'Passive: Auto-attacks cause demonic explosions dealing AoE magical damage',
   'Energetic': 'Passive: Each auto-attack restores energy',
-
-  // Holy tree
   'Holy Light': 'Channels a beam of holy light that heals the targeted ally',
   'Heal': 'Heals the targeted ally for a moderate amount of health',
   'Blessed Heal': 'Heals the targeted ally and nearby allies for a significant amount of health',
@@ -487,14 +502,10 @@ const SKILL_DESC = {
   'Redemption Staff': 'Sends out a healing projectile that bounces between allies',
   'Fallen Staff': 'Creates a holy zone that continuously heals allies inside',
   'Divine Blessing': 'Passive: Healing allies grants them increased damage resistances briefly',
-
-  // Bow tree
   'Multi-Shot': 'Fires multiple arrows in a cone, dealing physical damage to all enemies hit',
   'Rain of Arrows': 'Fires a volley of arrows into the air that rain down on the target area dealing physical damage',
   'Explosive Arrow': 'Fires an explosive arrow that detonates on impact dealing physical damage in an area',
   'Firing Squad': 'Passive: Standing still increases damage and attack speed',
-
-  // Crossbow tree
   'Light Bolt': 'Fires a quick crossbow bolt at the target dealing physical damage',
   'Vulnerability': 'Marks the target enemy, reducing their damage resistances and increasing damage taken',
   'Explosive Bolt': 'Fires an explosive bolt that detonates dealing physical damage in an area on impact',
@@ -505,205 +516,325 @@ const SKILL_DESC = {
 // ===== BUILDS DATABASE =====
 const BUILDS = [
   { name:"Bloodmoon Staff Group Dungeon", ct:"Group PvE", cc:"ct-gp", weapon:"Bloodmoon Staff", tree:"Nature", tc:"tb-nature",
-    head:"Cultist Cowl", ht:"cloth", chest:"Cultist Robe", cht:"cloth", shoes:"Cultist Sandals", st:"cloth",
+    head:"Cultist Cowl", chest:"Cultist Robe", shoes:"Cultist Sandals",
     cape:"Thetford Cape", potion:"Energy Potion", food:"Beef Stew", mount:"Swamp Salamander",
     qSkill:"Thorn Slash", wSkill:"Rampant Growth", eSkill:"Bloodmoon", passive:"Pestilence",
-    range:"Ranged", rc:"rng-r" },
+    range:"Ranged", rc:"rng-r",
+    headSkills:["Mortal Agony"], headPassive:"Balanced Mind",
+    chestSkills:["Bloodlust"], chestPassive:"Balanced Mind",
+    shoesSkills:["Energetic Sprint"], shoesPassive:"Efficiency" },
   { name:"Battleaxe Mist Build", ct:"Solo PvP", cc:"ct-sp", weapon:"Battleaxe", tree:"Axe", tc:"tb-axe",
-    head:"Hunter Hood", ht:"leather", chest:"Stalker Jacket", cht:"leather", shoes:"Hunter Shoes", st:"leather",
+    head:"Hunter Hood", chest:"Stalker Jacket", shoes:"Hunter Shoes",
     cape:"Bridgewatch Cape", potion:"Resistance Potion", food:"Braised Liver", mount:"Swiftclaw",
     qSkill:"Raging Slash", wSkill:"Adrenaline Boost", eSkill:"Berserk", passive:"Raging Frenzy",
-    range:"Melee", rc:"rng-m" },
+    range:"Melee", rc:"rng-m",
+    headSkills:["Rage"], headPassive:"Balanced Mind",
+    chestSkills:["Bloodlust"], chestPassive:"Balanced Mind",
+    shoesSkills:["Energetic Sprint"], shoesPassive:"Efficiency" },
   { name:"Nature Staff Fame Farm", ct:"Solo PvE", cc:"ct-spv", weapon:"Nature Staff", tree:"Nature", tc:"tb-nature",
-    head:"Scholar Cowl", ht:"cloth", chest:"Cultist Robe", cht:"cloth", shoes:"Scholar Sandals", st:"cloth",
+    head:"Scholar Cowl", chest:"Cultist Robe", shoes:"Scholar Sandals",
     cape:"Lymhurst Cape", potion:"Healing Potion", food:"Pie", mount:"Mule",
     qSkill:"Thorn Slash", wSkill:"Nature's Blessing", eSkill:"Rejuvenation", passive:"Pestilence",
-    range:"Ranged", rc:"rng-r" },
+    range:"Ranged", rc:"rng-r",
+    headSkills:["Poison"], headPassive:"Balanced Mind",
+    chestSkills:["Bloodlust"], chestPassive:"Balanced Mind",
+    shoesSkills:["Energetic Sprint"], shoesPassive:"Efficiency" },
   { name:"Dual Swords Mist Build", ct:"Solo PvP", cc:"ct-sp", weapon:"Dual Swords", tree:"Sword", tc:"tb-sword",
-    head:"Mercenary Hood", ht:"leather", chest:"Stalker Jacket", cht:"leather", shoes:"Hunter Shoes", st:"leather",
+    head:"Mercenary Hood", chest:"Stalker Jacket", shoes:"Hunter Shoes",
     cape:"Martlock Cape", potion:"Resistance Potion", food:"Braised Liver", mount:"Swiftclaw",
     qSkill:"Cleaving Strike", wSkill:"Interrupt", eSkill:"Ambush", passive:"Swordsmanship",
-    range:"Melee", rc:"rng-m" },
+    range:"Melee", rc:"rng-m",
+    headSkills:["Rage"], headPassive:"Balanced Mind",
+    chestSkills:["Bloodlust"], chestPassive:"Balanced Mind",
+    shoesSkills:["Energetic Sprint"], shoesPassive:"Efficiency" },
   { name:"Arcane Staff Corrupted", ct:"Solo PvP", cc:"ct-sp", weapon:"Arcane Staff", tree:"Arcane", tc:"tb-arcane",
-    head:"Scholar Cowl", ht:"cloth", chest:"Cultist Robe", cht:"cloth", shoes:"Royal Sandals", st:"cloth",
+    head:"Scholar Cowl", chest:"Cultist Robe", shoes:"Royal Sandals",
     cape:"Thetford Cape", potion:"Energy Potion", food:"Pie", mount:"Grizzly Bear",
     qSkill:"Arcane Cursee", wSkill:"Debuff", eSkill:"Immutable Curse", passive:"Arcane Empowerment",
-    range:"Ranged", rc:"rng-r" },
+    range:"Ranged", rc:"rng-r",
+    headSkills:["Poison"], headPassive:"Balanced Mind",
+    chestSkills:["Bloodlust"], chestPassive:"Balanced Mind",
+    shoesSkills:["Energetic Sprint"], shoesPassive:"Efficiency" },
   { name:"Blazing Staff DPS Group", ct:"Group PvE", cc:"ct-gp", weapon:"Blazing Staff", tree:"Fire", tc:"tb-fire",
-    head:"Mage Cowl", ht:"cloth", chest:"Cultist Robe", cht:"cloth", shoes:"Mage Sandals", st:"cloth",
+    head:"Mage Cowl", chest:"Cultist Robe", shoes:"Mage Sandals",
     cape:"Thetford Cape", potion:"Energy Potion", food:"Beef Stew", mount:"Riding Horse",
     qSkill:"Fireball", wSkill:"Flame Pillar", eSkill:"Explosive Staff", passive:"Brimstone",
-    range:"Ranged", rc:"rng-r" },
+    range:"Ranged", rc:"rng-r",
+    headSkills:["Poison"], headPassive:"Balanced Mind",
+    chestSkills:["Bloodlust"], chestPassive:"Balanced Mind",
+    shoesSkills:["Energetic Sprint"], shoesPassive:"Efficiency" },
   { name:"Deathgivers Mist Build", ct:"Solo PvP", cc:"ct-sp", weapon:"Deathgivers", tree:"Dagger", tc:"tb-dagger",
-    head:"Stalker Hood", ht:"leather", chest:"Stalker Jacket", cht:"leather", shoes:"Assassin Shoes", st:"leather",
+    head:"Stalker Hood", chest:"Stalker Jacket", shoes:"Assassin Shoes",
     cape:"Bridgewatch Cape", potion:"Resistance Potion", food:"Braised Liver", mount:"Swiftclaw",
     qSkill:"Rushing Dash", wSkill:"Smoke Bomb", eSkill:"Deathgiver", passive:"Ambush",
-    range:"Melee", rc:"rng-m" },
+    range:"Melee", rc:"rng-m",
+    headSkills:["Rage"], headPassive:"Balanced Mind",
+    chestSkills:["Bloodlust"], chestPassive:"Balanced Mind",
+    shoesSkills:["Energetic Sprint"], shoesPassive:"Efficiency" },
   { name:"Quarterstaff Solo PvP", ct:"Solo PvP", cc:"ct-sp", weapon:"Quarterstaff", tree:"Quarterstaff", tc:"tb-qs",
-    head:"Mercenary Hood", ht:"leather", chest:"Cleric Robe", cht:"cloth", shoes:"Hunter Shoes", st:"leather",
+    head:"Mercenary Hood", chest:"Cleric Robe", shoes:"Hunter Shoes",
     cape:"Fort Sterling Cape", potion:"Resistance Potion", food:"Braised Liver", mount:"Swiftclaw",
     qSkill:"High Kick", wSkill:"Staff Strike", eSkill:"Iron Will", passive:"Might",
-    range:"Melee", rc:"rng-m" },
+    range:"Melee", rc:"rng-m",
+    headSkills:["Rage"], headPassive:"Balanced Mind",
+    chestSkills:["Bloodlust"], chestPassive:"Balanced Mind",
+    shoesSkills:["Energetic Sprint"], shoesPassive:"Efficiency" },
   { name:"Dagger Pair Solo Gank", ct:"Gank", cc:"ct-gk", weapon:"Dagger Pair", tree:"Dagger", tc:"tb-dagger",
-    head:"Assassin Hood", ht:"leather", chest:"Stalker Jacket", cht:"leather", shoes:"Assassin Shoes", st:"leather",
+    head:"Assassin Hood", chest:"Stalker Jacket", shoes:"Assassin Shoes",
     cape:"Bridgewatch Cape", potion:"Poison Potion", food:"Braised Liver", mount:"Swiftclaw",
     qSkill:"Slashing Strike", wSkill:"Forbidden Stab", eSkill:"Bloodletter", passive:"Deep Cuts",
-    range:"Melee", rc:"rng-m" },
+    range:"Melee", rc:"rng-m",
+    headSkills:["Rage"], headPassive:"Balanced Mind",
+    chestSkills:["Bloodlust"], chestPassive:"Balanced Mind",
+    shoesSkills:["Energetic Sprint"], shoesPassive:"Efficiency" },
   { name:"Fists of Avalon Mist", ct:"Solo PvP", cc:"ct-sp", weapon:"Fists of Avalon", tree:"Mace", tc:"tb-mace",
-    head:"Cleric Cowl", ht:"cloth", chest:"Stalker Jacket", cht:"leather", shoes:"Hunter Shoes", st:"leather",
+    head:"Cleric Cowl", chest:"Stalker Jacket", shoes:"Hunter Shoes",
     cape:"Martlock Cape", potion:"Resistance Potion", food:"Braised Liver", mount:"Swiftclaw",
     qSkill:"Punching Bag", wSkill:"Rooting Bash", eSkill:"Unstoppable Charge", passive:"Sprint",
-    range:"Melee", rc:"rng-m" },
+    range:"Melee", rc:"rng-m",
+    headSkills:["Poison"], headPassive:"Balanced Mind",
+    chestSkills:["Bloodlust"], chestPassive:"Balanced Mind",
+    shoesSkills:["Energetic Sprint"], shoesPassive:"Efficiency" },
   { name:"Light Crossbow Solo Dungeon", ct:"Solo PvE", cc:"ct-spv", weapon:"Light Crossbow", tree:"Crossbow", tc:"tb-crossbow",
-    head:"Hunter Hood", ht:"leather", chest:"Cultist Robe", cht:"cloth", shoes:"Hunter Shoes", st:"leather",
+    head:"Hunter Hood", chest:"Cultist Robe", shoes:"Hunter Shoes",
     cape:"Lymhurst Cape", potion:"Healing Potion", food:"Pie", mount:"Riding Horse",
     qSkill:"Light Bolt", wSkill:"Vulnerability", eSkill:"Explosive Bolt", passive:"Firing Squad",
-    range:"Ranged", rc:"rng-r" },
+    range:"Ranged", rc:"rng-r",
+    headSkills:["Rage"], headPassive:"Balanced Mind",
+    chestSkills:["Bloodlust"], chestPassive:"Balanced Mind",
+    shoesSkills:["Energetic Sprint"], shoesPassive:"Efficiency" },
   { name:"Bear Paws Solo Gank", ct:"Gank", cc:"ct-gk", weapon:"Bear Paws", tree:"Axe", tc:"tb-axe",
-    head:"Hunter Hood", ht:"leather", chest:"Stalker Jacket", cht:"leather", shoes:"Hunter Shoes", st:"leather",
+    head:"Hunter Hood", chest:"Stalker Jacket", shoes:"Hunter Shoes",
     cape:"Bridgewatch Cape", potion:"Resistance Potion", food:"Braised Liver", mount:"Swiftclaw",
     qSkill:"Rending Strike", wSkill:"Adrenaline Boost", eSkill:"Rage of the Bear", passive:"Raging Frenzy",
-    range:"Melee", rc:"rng-m" },
+    range:"Melee", rc:"rng-m",
+    headSkills:["Rage"], headPassive:"Balanced Mind",
+    chestSkills:["Bloodlust"], chestPassive:"Balanced Mind",
+    shoesSkills:["Energetic Sprint"], shoesPassive:"Efficiency" },
   { name:"Spear Corrupted Dungeon", ct:"Solo PvP", cc:"ct-sp", weapon:"Spear", tree:"Spear", tc:"tb-spear",
-    head:"Mercenary Hood", ht:"leather", chest:"Stalker Jacket", cht:"leather", shoes:"Hunter Shoes", st:"leather",
+    head:"Mercenary Hood", chest:"Stalker Jacket", shoes:"Hunter Shoes",
     cape:"Fort Sterling Cape", potion:"Resistance Potion", food:"Braised Liver", mount:"Swiftclaw",
     qSkill:"Spear Stab", wSkill:"Spear Hook", eSkill:"Vault", passive:"Sprint",
-    range:"Melee", rc:"rng-m" },
+    range:"Melee", rc:"rng-m",
+    headSkills:["Rage"], headPassive:"Balanced Mind",
+    chestSkills:["Bloodlust"], chestPassive:"Balanced Mind",
+    shoesSkills:["Energetic Sprint"], shoesPassive:"Efficiency" },
   { name:"Bow of Badon Corrupted", ct:"Solo PvP", cc:"ct-sp", weapon:"Bow of Badon", tree:"Bow", tc:"tb-bow",
-    head:"Hunter Hood", ht:"leather", chest:"Cultist Robe", cht:"cloth", shoes:"Hunter Shoes", st:"leather",
+    head:"Hunter Hood", chest:"Cultist Robe", shoes:"Hunter Shoes",
     cape:"Lymhurst Cape", potion:"Resistance Potion", food:"Braised Liver", mount:"Swiftclaw",
     qSkill:"Multi-Shot", wSkill:"Rain of Arrows", eSkill:"Explosive Arrow", passive:"Firing Squad",
-    range:"Ranged", rc:"rng-r" },
+    range:"Ranged", rc:"rng-r",
+    headSkills:["Rage"], headPassive:"Balanced Mind",
+    chestSkills:["Bloodlust"], chestPassive:"Balanced Mind",
+    shoesSkills:["Energetic Sprint"], shoesPassive:"Efficiency" },
   { name:"Cursed Staff Mist", ct:"Solo PvP", cc:"ct-sp", weapon:"Cursed Staff", tree:"Cursed", tc:"tb-cursed",
-    head:"Cleric Cowl", ht:"cloth", chest:"Cultist Robe", cht:"cloth", shoes:"Royal Sandals", st:"cloth",
+    head:"Cleric Cowl", chest:"Cultist Robe", shoes:"Royal Sandals",
     cape:"Thetford Cape", potion:"Energy Potion", food:"Pie", mount:"Swamp Salamander",
     qSkill:"Vile Curse", wSkill:"Blight", eSkill:"Skull Fortress", passive:"Death Curse",
-    range:"Ranged", rc:"rng-r" },
+    range:"Ranged", rc:"rng-r",
+    headSkills:["Poison"], headPassive:"Balanced Mind",
+    chestSkills:["Bloodlust"], chestPassive:"Balanced Mind",
+    shoesSkills:["Energetic Sprint"], shoesPassive:"Efficiency" },
   { name:"Prowling Staff Mist", ct:"Solo PvP", cc:"ct-sp", weapon:"Prowling Staff", tree:"Nature", tc:"tb-nature",
-    head:"Cleric Cowl", ht:"cloth", chest:"Cultist Robe", cht:"cloth", shoes:"Scholar Sandals", st:"cloth",
+    head:"Cleric Cowl", chest:"Cultist Robe", shoes:"Scholar Sandals",
     cape:"Lymhurst Cape", potion:"Energy Potion", food:"Pie", mount:"Swamp Salamander",
     qSkill:"Thorn Slash", wSkill:"Nature's Swiftness", eSkill:"Slime", passive:"Pestilence",
-    range:"Ranged", rc:"rng-r" },
+    range:"Ranged", rc:"rng-r",
+    headSkills:["Poison"], headPassive:"Balanced Mind",
+    chestSkills:["Bloodlust"], chestPassive:"Balanced Mind",
+    shoesSkills:["Energetic Sprint"], shoesPassive:"Efficiency" },
   { name:"Carving Sword Small Scale", ct:"Small Scale", cc:"ct-ss", weapon:"Carving Sword", tree:"Sword", tc:"tb-sword",
-    head:"Cleric Cowl", ht:"cloth", chest:"Stalker Jacket", cht:"leather", shoes:"Hunter Shoes", st:"leather",
+    head:"Cleric Cowl", chest:"Stalker Jacket", shoes:"Hunter Shoes",
     cape:"Martlock Cape", potion:"Resistance Potion", food:"Braised Liver", mount:"Swiftclaw",
     qSkill:"Cleaving Strike", wSkill:"Heroic Strike", eSkill:"Carving Strike", passive:"Swordsmanship",
-    range:"Melee", rc:"rng-m" },
+    range:"Melee", rc:"rng-m",
+    headSkills:["Poison"], headPassive:"Balanced Mind",
+    chestSkills:["Bloodlust"], chestPassive:"Balanced Mind",
+    shoesSkills:["Energetic Sprint"], shoesPassive:"Efficiency" },
   { name:"Shadowcaller Group Dungeon", ct:"Group PvE", cc:"ct-gp", weapon:"Shadowcaller", tree:"Cursed", tc:"tb-cursed",
-    head:"Cultist Cowl", ht:"cloth", chest:"Cultist Robe", cht:"cloth", shoes:"Mage Sandals", st:"cloth",
+    head:"Cultist Cowl", chest:"Cultist Robe", shoes:"Mage Sandals",
     cape:"Thetford Cape", potion:"Energy Potion", food:"Beef Stew", mount:"Riding Horse",
     qSkill:"Vile Curse", wSkill:"Aggressive Curses", eSkill:"Call of the Dead", passive:"Death Curse",
-    range:"Ranged", rc:"rng-r" },
+    range:"Ranged", rc:"rng-r",
+    headSkills:["Poison"], headPassive:"Balanced Mind",
+    chestSkills:["Bloodlust"], chestPassive:"Balanced Mind",
+    shoesSkills:["Energetic Sprint"], shoesPassive:"Efficiency" },
   { name:"Incubus Mace Tank Group", ct:"Group PvE", cc:"ct-gp", weapon:"Incubus Mace", tree:"Mace", tc:"tb-mace",
-    head:"Knight Helmet", ht:"plate", chest:"Knight Armor", cht:"plate", shoes:"Knight Boots", st:"plate",
+    head:"Knight Helmet", chest:"Knight Armor", shoes:"Knight Boots",
     cape:"Fort Sterling Cape", potion:"Resistance Potion", food:"Beef Stew", mount:"Armored Horse",
     qSkill:"Smite", wSkill:"Provoke", eSkill:"Rooting Bash", passive:"Sprint",
-    range:"Melee", rc:"rng-m" },
+    range:"Melee", rc:"rng-m",
+    headSkills:["Rage"], headPassive:"Balanced Mind",
+    chestSkills:["Bloodlust"], chestPassive:"Balanced Mind",
+    shoesSkills:["Energetic Sprint"], shoesPassive:"Efficiency" },
   { name:"Fire Staff Corrupted", ct:"Solo PvP", cc:"ct-sp", weapon:"Fire Staff", tree:"Fire", tc:"tb-fire",
-    head:"Mage Cowl", ht:"cloth", chest:"Cultist Robe", cht:"cloth", shoes:"Mage Sandals", st:"cloth",
+    head:"Mage Cowl", chest:"Cultist Robe", shoes:"Mage Sandals",
     cape:"Thetford Cape", potion:"Energy Potion", food:"Pie", mount:"Riding Horse",
     qSkill:"Fireball", wSkill:"Flame Pillar", eSkill:"Meteor", passive:"Brimstone",
-    range:"Ranged", rc:"rng-r" },
+    range:"Ranged", rc:"rng-r",
+    headSkills:["Poison"], headPassive:"Balanced Mind",
+    chestSkills:["Bloodlust"], chestPassive:"Balanced Mind",
+    shoesSkills:["Energetic Sprint"], shoesPassive:"Efficiency" },
   { name:"Druidic Staff Group Dungeon", ct:"Group PvE", cc:"ct-gp", weapon:"Druidic Staff", tree:"Nature", tc:"tb-nature",
-    head:"Cleric Cowl", ht:"cloth", chest:"Cultist Robe", cht:"cloth", shoes:"Royal Sandals", st:"cloth",
+    head:"Cleric Cowl", chest:"Cultist Robe", shoes:"Royal Sandals",
     cape:"Lymhurst Cape", potion:"Energy Potion", food:"Beef Stew", mount:"Riding Horse",
     qSkill:"Thorn Slash", wSkill:"Nature's Blessing", eSkill:"Wild Growth", passive:"Pestilence",
-    range:"Ranged", rc:"rng-r" },
+    range:"Ranged", rc:"rng-r",
+    headSkills:["Poison"], headPassive:"Balanced Mind",
+    chestSkills:["Bloodlust"], chestPassive:"Balanced Mind",
+    shoesSkills:["Energetic Sprint"], shoesPassive:"Efficiency" },
   { name:"Earthrune Staff ZvZ Tank", ct:"ZvZ", cc:"ct-zvz", weapon:"Earthrune Staff", tree:"Arcane", tc:"tb-arcane",
-    head:"Knight Helmet", ht:"plate", chest:"Knight Armor", cht:"plate", shoes:"Knight Boots", st:"plate",
+    head:"Knight Helmet", chest:"Knight Armor", shoes:"Knight Boots",
     cape:"Fort Sterling Cape", potion:"Resistance Potion", food:"Beef Stew", mount:"Armored Horse",
     qSkill:"Arcane Cursee", wSkill:"Gravity", eSkill:"Rune of Earth", passive:"Arcane Empowerment",
-    range:"Medium", rc:"rng-md" },
+    range:"Medium", rc:"rng-md",
+    headSkills:["Rage"], headPassive:"Balanced Mind",
+    chestSkills:["Bloodlust"], chestPassive:"Balanced Mind",
+    shoesSkills:["Energetic Sprint"], shoesPassive:"Efficiency" },
   { name:"Hallowfall Healer", ct:"Group PvE", cc:"ct-gp", weapon:"Hallowfall", tree:"Holy", tc:"tb-holy",
-    head:"Cleric Cowl", ht:"cloth", chest:"Cultist Robe", cht:"cloth", shoes:"Royal Sandals", st:"cloth",
+    head:"Cleric Cowl", chest:"Cultist Robe", shoes:"Royal Sandals",
     cape:"Lymhurst Cape", potion:"Energy Potion", food:"Beef Stew", mount:"Riding Horse",
     qSkill:"Holy Light", wSkill:"Heal", eSkill:"Divine Protection", passive:"Divine Blessing",
-    range:"Ranged", rc:"rng-r" },
+    range:"Ranged", rc:"rng-r",
+    headSkills:["Poison"], headPassive:"Balanced Mind",
+    chestSkills:["Bloodlust"], chestPassive:"Balanced Mind",
+    shoesSkills:["Energetic Sprint"], shoesPassive:"Efficiency" },
   { name:"Bloodletter Mist", ct:"Solo PvP", cc:"ct-sp", weapon:"Bloodletter", tree:"Dagger", tc:"tb-dagger",
-    head:"Stalker Hood", ht:"leather", chest:"Stalker Jacket", cht:"leather", shoes:"Assassin Shoes", st:"leather",
+    head:"Stalker Hood", chest:"Stalker Jacket", shoes:"Assassin Shoes",
     cape:"Bridgewatch Cape", potion:"Resistance Potion", food:"Braised Liver", mount:"Swiftclaw",
     qSkill:"Rushing Dash", wSkill:"Smoke Bomb", eSkill:"Bloodletter", passive:"Ambush",
-    range:"Melee", rc:"rng-m" },
+    range:"Melee", rc:"rng-m",
+    headSkills:["Rage"], headPassive:"Balanced Mind",
+    chestSkills:["Bloodlust"], chestPassive:"Balanced Mind",
+    shoesSkills:["Energetic Sprint"], shoesPassive:"Efficiency" },
   { name:"Demonic Staff 2v2 Hellgate", ct:"Hellgate", cc:"ct-hg", weapon:"Demonic Staff", tree:"Cursed", tc:"tb-cursed",
-    head:"Cleric Cowl", ht:"cloth", chest:"Cultist Robe", cht:"cloth", shoes:"Royal Sandals", st:"cloth",
+    head:"Cleric Cowl", chest:"Cultist Robe", shoes:"Royal Sandals",
     cape:"Thetford Cape", potion:"Energy Potion", food:"Pie", mount:"Grizzly Bear",
     qSkill:"Vile Curse", wSkill:"Blight", eSkill:"Demonic Scourge", passive:"Death Curse",
-    range:"Ranged", rc:"rng-r" },
+    range:"Ranged", rc:"rng-r",
+    headSkills:["Poison"], headPassive:"Balanced Mind",
+    chestSkills:["Bloodlust"], chestPassive:"Balanced Mind",
+    shoesSkills:["Energetic Sprint"], shoesPassive:"Efficiency" },
   { name:"Infinity Blade Crystal Arena", ct:"Arena", cc:"ct-ar", weapon:"Infinity Blade", tree:"Sword", tc:"tb-sword",
-    head:"Cleric Cowl", ht:"cloth", chest:"Stalker Jacket", cht:"leather", shoes:"Hunter Shoes", st:"leather",
+    head:"Cleric Cowl", chest:"Stalker Jacket", shoes:"Hunter Shoes",
     cape:"Martlock Cape", potion:"Resistance Potion", food:"Braised Liver", mount:"Swiftclaw",
     qSkill:"Cleaving Strike", wSkill:"Heroic Strike", eSkill:"Infinity Slash", passive:"Swordsmanship",
-    range:"Melee", rc:"rng-m" },
+    range:"Melee", rc:"rng-m",
+    headSkills:["Poison"], headPassive:"Balanced Mind",
+    chestSkills:["Bloodlust"], chestPassive:"Balanced Mind",
+    shoesSkills:["Energetic Sprint"], shoesPassive:"Efficiency" },
   { name:"Boltcasters Solo Dungeon", ct:"Solo PvE", cc:"ct-spv", weapon:"Boltcasters", tree:"Crossbow", tc:"tb-crossbow",
-    head:"Hunter Hood", ht:"leather", chest:"Cultist Robe", cht:"cloth", shoes:"Hunter Shoes", st:"leather",
+    head:"Hunter Hood", chest:"Cultist Robe", shoes:"Hunter Shoes",
     cape:"Lymhurst Cape", potion:"Healing Potion", food:"Pie", mount:"Riding Horse",
     qSkill:"Light Bolt", wSkill:"Vulnerability", eSkill:"Power Shot", passive:"Firing Squad",
-    range:"Ranged", rc:"rng-r" },
+    range:"Ranged", rc:"rng-r",
+    headSkills:["Rage"], headPassive:"Balanced Mind",
+    chestSkills:["Bloodlust"], chestPassive:"Balanced Mind",
+    shoesSkills:["Energetic Sprint"], shoesPassive:"Efficiency" },
   { name:"Holy Staff Healer Group", ct:"Group PvE", cc:"ct-gp", weapon:"Holy Staff", tree:"Holy", tc:"tb-holy",
-    head:"Cleric Cowl", ht:"cloth", chest:"Cultist Robe", cht:"cloth", shoes:"Royal Sandals", st:"cloth",
+    head:"Cleric Cowl", chest:"Cultist Robe", shoes:"Royal Sandals",
     cape:"Lymhurst Cape", potion:"Energy Potion", food:"Beef Stew", mount:"Riding Horse",
     qSkill:"Holy Light", wSkill:"Heal", eSkill:"Blessed Heal", passive:"Divine Blessing",
-    range:"Ranged", rc:"rng-r" },
+    range:"Ranged", rc:"rng-r",
+    headSkills:["Poison"], headPassive:"Balanced Mind",
+    chestSkills:["Bloodlust"], chestPassive:"Balanced Mind",
+    shoesSkills:["Energetic Sprint"], shoesPassive:"Efficiency" },
   { name:"Spirithunter Support Group", ct:"Group PvE", cc:"ct-gp", weapon:"Spirithunter", tree:"Nature", tc:"tb-nature",
-    head:"Cleric Cowl", ht:"cloth", chest:"Cultist Robe", cht:"cloth", shoes:"Mage Sandals", st:"cloth",
+    head:"Cleric Cowl", chest:"Cultist Robe", shoes:"Mage Sandals",
     cape:"Lymhurst Cape", potion:"Energy Potion", food:"Beef Stew", mount:"Riding Horse",
     qSkill:"Thorn Slash", wSkill:"Nature's Swiftness", eSkill:"Spirit Trance", passive:"Pestilence",
-    range:"Ranged", rc:"rng-r" },
+    range:"Ranged", rc:"rng-r",
+    headSkills:["Poison"], headPassive:"Balanced Mind",
+    chestSkills:["Bloodlust"], chestPassive:"Balanced Mind",
+    shoesSkills:["Energetic Sprint"], shoesPassive:"Efficiency" },
   { name:"1H Spear Open World", ct:"Open World", cc:"ct-ow", weapon:"1H Spear", tree:"Spear", tc:"tb-spear",
-    head:"Hunter Hood", ht:"leather", chest:"Stalker Jacket", cht:"leather", shoes:"Hunter Shoes", st:"leather",
+    head:"Hunter Hood", chest:"Stalker Jacket", shoes:"Hunter Shoes",
     cape:"Fort Sterling Cape", potion:"Resistance Potion", food:"Braised Liver", mount:"Swiftclaw",
     qSkill:"Spear Stab", wSkill:"Spear Hook", eSkill:"Vault", passive:"Sprint",
-    range:"Melee", rc:"rng-m" },
+    range:"Melee", rc:"rng-m",
+    headSkills:["Rage"], headPassive:"Balanced Mind",
+    chestSkills:["Bloodlust"], chestPassive:"Balanced Mind",
+    shoesSkills:["Energetic Sprint"], shoesPassive:"Efficiency" },
   { name:"Great Frost Group PvP", ct:"Group PvP", cc:"ct-gpv", weapon:"Great Frost", tree:"Frost", tc:"tb-frost",
-    head:"Mage Cowl", ht:"cloth", chest:"Cultist Robe", cht:"cloth", shoes:"Mage Sandals", st:"cloth",
+    head:"Mage Cowl", chest:"Cultist Robe", shoes:"Mage Sandals",
     cape:"Thetford Cape", potion:"Energy Potion", food:"Beef Stew", mount:"Riding Horse",
     qSkill:"Frost Bolt", wSkill:"Ice Storm", eSkill:"Deep Freeze", passive:"Frostbite",
-    range:"Ranged", rc:"rng-r" },
+    range:"Ranged", rc:"rng-r",
+    headSkills:["Poison"], headPassive:"Balanced Mind",
+    chestSkills:["Bloodlust"], chestPassive:"Balanced Mind",
+    shoesSkills:["Energetic Sprint"], shoesPassive:"Efficiency" },
   { name:"Claymore Solo PvP", ct:"Solo PvP", cc:"ct-sp", weapon:"Claymore", tree:"Sword", tc:"tb-sword",
-    head:"Mercenary Hood", ht:"leather", chest:"Stalker Jacket", cht:"leather", shoes:"Hunter Shoes", st:"leather",
+    head:"Mercenary Hood", chest:"Stalker Jacket", shoes:"Hunter Shoes",
     cape:"Fort Sterling Cape", potion:"Resistance Potion", food:"Braised Liver", mount:"Swiftclaw",
     qSkill:"Cleaving Strike", wSkill:"Heroic Strike", eSkill:"Claymore Slash", passive:"Swordsmanship",
-    range:"Melee", rc:"rng-m" },
+    range:"Melee", rc:"rng-m",
+    headSkills:["Rage"], headPassive:"Balanced Mind",
+    chestSkills:["Bloodlust"], chestPassive:"Balanced Mind",
+    shoesSkills:["Energetic Sprint"], shoesPassive:"Efficiency" },
   { name:"Ironroot Staff Avalon", ct:"Avalon", cc:"ct-av", weapon:"Ironroot Staff", tree:"Nature", tc:"tb-nature",
-    head:"Knight Helmet", ht:"plate", chest:"Knight Armor", cht:"plate", shoes:"Knight Boots", st:"plate",
+    head:"Knight Helmet", chest:"Knight Armor", shoes:"Knight Boots",
     cape:"Fort Sterling Cape", potion:"Resistance Potion", food:"Beef Stew", mount:"Armored Horse",
     qSkill:"Thorn Slash", wSkill:"Nature's Blessing", eSkill:"Iron Root", passive:"Pestilence",
-    range:"Medium", rc:"rng-md" },
+    range:"Medium", rc:"rng-md",
+    headSkills:["Rage"], headPassive:"Balanced Mind",
+    chestSkills:["Bloodlust"], chestPassive:"Balanced Mind",
+    shoesSkills:["Energetic Sprint"], shoesPassive:"Efficiency" },
   { name:"Galatine Pair Small Scale", ct:"Small Scale", cc:"ct-ss", weapon:"Galatine Pair", tree:"Sword", tc:"tb-sword",
-    head:"Cleric Cowl", ht:"cloth", chest:"Stalker Jacket", cht:"leather", shoes:"Assassin Shoes", st:"leather",
+    head:"Cleric Cowl", chest:"Stalker Jacket", shoes:"Assassin Shoes",
     cape:"Martlock Cape", potion:"Resistance Potion", food:"Braised Liver", mount:"Swiftclaw",
     qSkill:"Cleaving Strike", wSkill:"Interrupt", eSkill:"Galatine Slice", passive:"Swordsmanship",
-    range:"Melee", rc:"rng-m" },
+    range:"Melee", rc:"rng-m",
+    headSkills:["Poison"], headPassive:"Balanced Mind",
+    chestSkills:["Bloodlust"], chestPassive:"Balanced Mind",
+    shoesSkills:["Energetic Sprint"], shoesPassive:"Efficiency" },
   { name:"Frost Staff Corrupted", ct:"Solo PvP", cc:"ct-sp", weapon:"Frost Staff", tree:"Frost", tc:"tb-frost",
-    head:"Mage Cowl", ht:"cloth", chest:"Cultist Robe", cht:"cloth", shoes:"Mage Sandals", st:"cloth",
+    head:"Mage Cowl", chest:"Cultist Robe", shoes:"Mage Sandals",
     cape:"Thetford Cape", potion:"Energy Potion", food:"Pie", mount:"Riding Horse",
     qSkill:"Frost Bolt", wSkill:"Ice Storm", eSkill:"Frozen Helix", passive:"Frostbite",
-    range:"Ranged", rc:"rng-r" },
+    range:"Ranged", rc:"rng-r",
+    headSkills:["Poison"], headPassive:"Balanced Mind",
+    chestSkills:["Bloodlust"], chestPassive:"Balanced Mind",
+    shoesSkills:["Energetic Sprint"], shoesPassive:"Efficiency" },
   { name:"Heavy Crossbow ZvZ", ct:"ZvZ", cc:"ct-zvz", weapon:"Heavy Crossbow", tree:"Crossbow", tc:"tb-crossbow",
-    head:"Cultist Cowl", ht:"cloth", chest:"Cultist Robe", cht:"cloth", shoes:"Mage Sandals", st:"cloth",
+    head:"Cultist Cowl", chest:"Cultist Robe", shoes:"Mage Sandals",
     cape:"Thetford Cape", potion:"Energy Potion", food:"Beef Stew", mount:"Armored Horse",
     qSkill:"Light Bolt", wSkill:"Vulnerability", eSkill:"Siege Bolt", passive:"Firing Squad",
-    range:"Ranged", rc:"rng-r" },
+    range:"Ranged", rc:"rng-r",
+    headSkills:["Poison"], headPassive:"Balanced Mind",
+    chestSkills:["Bloodlust"], chestPassive:"Balanced Mind",
+    shoesSkills:["Energetic Sprint"], shoesPassive:"Efficiency" },
   { name:"Greataxe ZvZ", ct:"ZvZ", cc:"ct-zvz", weapon:"Greataxe", tree:"Axe", tc:"tb-axe",
-    head:"Cultist Cowl", ht:"cloth", chest:"Cultist Robe", cht:"cloth", shoes:"Mage Sandals", st:"cloth",
+    head:"Cultist Cowl", chest:"Cultist Robe", shoes:"Mage Sandals",
     cape:"Thetford Cape", potion:"Energy Potion", food:"Beef Stew", mount:"Armored Horse",
     qSkill:"Rending Strike", wSkill:"Whirlwind", eSkill:"Gravitas", passive:"Raging Frenzy",
-    range:"Melee", rc:"rng-m" },
+    range:"Melee", rc:"rng-m",
+    headSkills:["Poison"], headPassive:"Balanced Mind",
+    chestSkills:["Bloodlust"], chestPassive:"Balanced Mind",
+    shoesSkills:["Energetic Sprint"], shoesPassive:"Efficiency" },
   { name:"Brimstone Staff ZvZ", ct:"ZvZ", cc:"ct-zvz", weapon:"Brimstone Staff", tree:"Fire", tc:"tb-fire",
-    head:"Cultist Cowl", ht:"cloth", chest:"Cultist Robe", cht:"cloth", shoes:"Mage Sandals", st:"cloth",
+    head:"Cultist Cowl", chest:"Cultist Robe", shoes:"Mage Sandals",
     cape:"Thetford Cape", potion:"Energy Potion", food:"Beef Stew", mount:"Armored Horse",
     qSkill:"Fireball", wSkill:"Flame Pillar", eSkill:"Explosive Staff", passive:"Brimstone",
-    range:"Ranged", rc:"rng-r" },
+    range:"Ranged", rc:"rng-r",
+    headSkills:["Poison"], headPassive:"Balanced Mind",
+    chestSkills:["Bloodlust"], chestPassive:"Balanced Mind",
+    shoesSkills:["Energetic Sprint"], shoesPassive:"Efficiency" },
   { name:"Halberd Open World", ct:"Open World", cc:"ct-ow", weapon:"Halberd", tree:"Spear", tc:"tb-spear",
-    head:"Hunter Hood", ht:"leather", chest:"Stalker Jacket", cht:"leather", shoes:"Hunter Shoes", st:"leather",
+    head:"Hunter Hood", chest:"Stalker Jacket", shoes:"Hunter Shoes",
     cape:"Fort Sterling Cape", potion:"Resistance Potion", food:"Braised Liver", mount:"Swiftclaw",
     qSkill:"Spear Stab", wSkill:"Spear Hook", eSkill:"Halberd Swing", passive:"Sprint",
-    range:"Melee", rc:"rng-m" },
+    range:"Melee", rc:"rng-m",
+    headSkills:["Rage"], headPassive:"Balanced Mind",
+    chestSkills:["Bloodlust"], chestPassive:"Balanced Mind",
+    shoesSkills:["Energetic Sprint"], shoesPassive:"Efficiency" },
   { name:"Black Monk Staff Gank", ct:"Gank", cc:"ct-gk", weapon:"Black Monk Staff", tree:"Quarterstaff", tc:"tb-qs",
-    head:"Assassin Hood", ht:"leather", chest:"Stalker Jacket", cht:"leather", shoes:"Assassin Shoes", st:"leather",
+    head:"Assassin Hood", chest:"Stalker Jacket", shoes:"Assassin Shoes",
     cape:"Bridgewatch Cape", potion:"Resistance Potion", food:"Braised Liver", mount:"Swiftclaw",
     qSkill:"High Kick", wSkill:"Staff Strike", eSkill:"Black Monk Kick", passive:"Might",
-    range:"Melee", rc:"rng-m" },
+    range:"Melee", rc:"rng-m",
+    headSkills:["Rage"], headPassive:"Balanced Mind",
+    chestSkills:["Bloodlust"], chestPassive:"Balanced Mind",
+    shoesSkills:["Energetic Sprint"], shoesPassive:"Efficiency" },
 ];
 
 // ===== STATE =====
@@ -719,7 +850,6 @@ const $=id=>document.getElementById(id);
 
 // ===== INIT =====
 function init() {
-  // Sliders
   [['c-dt','c-dt-v','dt','s'],['c-rn','c-rn-v','rounds',''],['c-at','c-at-v','at','s']].forEach(([sid,vid,key,suf])=>{
     $(sid).addEventListener('input',()=>{ S.cfg[key]=+$(sid).value; $(vid).textContent=$(sid).value+suf; });
   });
@@ -728,7 +858,6 @@ function init() {
   $('btn-quit').addEventListener('click',quit);
   $('btn-next').addEventListener('click',nextRound);
 
-  // Keyboard
   document.addEventListener('keydown',e=>{
     if(S.phase==='answer') {
       const map={a:0,b:1,c:2,d:3};
@@ -798,7 +927,6 @@ function showAnswer() {
 }
 
 function genQuestion(build) {
-  // Pick a random skill from Q/W/E
   const skills = [
     { slot:'Q', name:build.qSkill },
     { slot:'W', name:build.wSkill },
@@ -807,15 +935,12 @@ function genQuestion(build) {
   const pick = skills[Math.floor(Math.random()*skills.length)];
   const correctDesc = SKILL_DESC[pick.name] || 'Deals damage to the target enemy';
 
-  // Get distractor descriptions from other skills
   const allDescs = Object.values(SKILL_DESC).filter(d => d !== correctDesc);
   const shuffledDescs = allDescs.sort(()=>Math.random()-.5);
   const numOpts = S.cfg.diff==='easy'?3:4;
 
-  // For hard mode, try to pick descriptions from the same weapon tree
   let distractors;
   if(S.cfg.diff==='hard') {
-    // Get skill names from same tree builds
     const sameTree = BUILDS.filter(b=>b.tree===build.tree);
     const sameTreeSkills = [];
     sameTree.forEach(b=>{
@@ -825,7 +950,6 @@ function genQuestion(build) {
     });
     const sameTreeShuffled = sameTreeSkills.filter(d=>d!==correctDesc).sort(()=>Math.random()-.5);
     distractors = [...sameTreeShuffled.slice(0,numOpts-1)];
-    // Fill remaining if needed
     let idx=0;
     while(distractors.length<numOpts-1 && idx<shuffledDescs.length) {
       if(!distractors.includes(shuffledDescs[idx])) distractors.push(shuffledDescs[idx]);
@@ -861,7 +985,6 @@ function handleAnswer(selected, btnEl) {
   const q = S.question;
   const isCorrect = selected === q.correctDesc;
 
-  // Disable all and mark correct answer
   document.querySelectorAll('.qob').forEach(btn => {
     btn.classList.add('dis');
     if(btn.dataset.isCorrect === '1') btn.classList.add('ok');
@@ -909,36 +1032,67 @@ function updStats() {
   $('st-sk').textContent=S.streak;
 }
 
+// ===== IN-GAME INSPECTION GRID RENDER =====
 function renderBuild(b, hidden) {
-  const imgTag = (id,cls) => `<div class="gi ${cls}"><img src="${itemImg(id)}" alt="" loading="lazy" onerror="this.style.display='none'"></div>`;
-  const cap = s => s.charAt(0).toUpperCase()+s.slice(1);
+  // Skill circle HTML
+  const skCircle = (name, cls) => {
+    if(!name) return '';
+    return `<div class="sk-circle ${cls}"><img src="${spellImg(name)}" alt="${name}" onerror="this.style.display='none'"></div>`;
+  };
+
+  // Item slot HTML
+  const slot = (itemId, label, skills=[]) => {
+    const id = ITEM_IDS[itemId];
+    if(!id) return `<div class="insp-slot empty"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#6c757d" stroke-width="1"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></div><div class="slot-label">${label}</div>`;
+    const skillHtml = skills.length ? `<div class="sk-overlay">${skills.map(s => skCircle(s.name, s.cls)).join('')}</div>` : '';
+    return `<div class="insp-slot"><img class="item-img" src="${itemImg(id)}" alt="${label}" loading="lazy">${skillHtml}</div><div class="slot-label">${label}</div>`;
+  };
+
+  // Weapon skills (Q, W, passive)
+  const wpnSkills = [
+    { name: b.qSkill, cls: 'sk-q' },
+    { name: b.wSkill, cls: 'sk-w' },
+    { name: b.passive, cls: 'sk-p' }
+  ];
+
+  // Armor skills (active, passive)
+  const headSkills = [
+    ...(b.headSkills||[]).map(n=>({name:n,cls:'sk-q'})),
+    ...(b.headPassive?[{name:b.headPassive,cls:'sk-p'}]:[])
+  ];
+  const chestSkills = [
+    ...(b.chestSkills||[]).map(n=>({name:n,cls:'sk-q'})),
+    ...(b.chestPassive?[{name:b.chestPassive,cls:'sk-p'}]:[])
+  ];
+  const shoesSkills = [
+    ...(b.shoesSkills||[]).map(n=>({name:n,cls:'sk-q'})),
+    ...(b.shoesPassive?[{name:b.shoesPassive,cls:'sk-p'}]:[])
+  ];
+
   $('bc').innerHTML = `
-    <div class="bc-top"><h3><span class="tb ${b.tc}">${b.tree}</span> ${b.weapon}</h3><span class="bc-ct ${b.cc}">${b.ct}</span></div>
-    <div class="bsec">
-      <div class="bsec-t">Weapon & Skills</div>
-      <div class="gr">${imgTag(ITEM_IDS[b.weapon],'wpn')}<div class="ginfo"><div class="gn">${b.weapon}</div><div class="gd">${b.tree} Tree</div></div><span class="rng ${b.rc}">${b.range}</span></div>
-      <div class="sk-row">
-        <div class="sk sk-q"><div class="sk-k">Q</div><div class="sk-ic"><img src="${spellImg(b.qSkill)}" alt="" loading="lazy" onerror="this.style.display='none'"></div><div class="sk-n">${b.qSkill}</div></div>
-        <div class="sk sk-w"><div class="sk-k">W</div><div class="sk-ic"><img src="${spellImg(b.wSkill)}" alt="" loading="lazy" onerror="this.style.display='none'"></div><div class="sk-n">${b.wSkill}</div></div>
-        <div class="sk sk-e"><div class="sk-k">E</div><div class="sk-ic"><img src="${spellImg(b.eSkill)}" alt="" loading="lazy" onerror="this.style.display='none'"></div><div class="sk-n">${b.eSkill}</div></div>
-        <div class="sk sk-p"><div class="sk-k">P</div><div class="sk-n">${b.passive}</div></div>
+    <div class="bc-top">
+      <h3><span class="tb ${b.tc}">${b.tree}</span> <span class="bc-name">${b.weapon}</span></h3>
+      <span style="display:flex;align-items:center;gap:4px"><span class="rng ${b.rc}">${b.range}</span><span class="bc-ct ${b.cc}">${b.ct}</span></span>
+    </div>
+    <div class="insp-grid">
+      <!-- Left column: Cape, Weapon, Potion -->
+      <div class="insp-col insp-col-lr">
+        ${slot(b.cape, b.cape)}
+        ${slot(b.weapon, b.weapon, wpnSkills)}
+        ${slot(b.potion, b.potion)}
       </div>
-    </div>
-    <div class="bsec">
-      <div class="bsec-t">Armor</div>
-      <div class="gr">${imgTag(ITEM_IDS[b.head],'hd')}<div class="ginfo"><div class="gn">${b.head}</div><div class="gd">${cap(b.ht)}</div></div></div>
-      <div class="gr">${imgTag(ITEM_IDS[b.chest],'ch')}<div class="ginfo"><div class="gn">${b.chest}</div><div class="gd">${cap(b.cht)}</div></div></div>
-      <div class="gr">${imgTag(ITEM_IDS[b.shoes],'sh')}<div class="ginfo"><div class="gn">${b.shoes}</div><div class="gd">${cap(b.st)}</div></div></div>
-    </div>
-    <div class="bsec">
-      <div class="bsec-t">Consumables</div>
-      <div class="gr">${imgTag(ITEM_IDS[b.cape],'cp')}<div class="ginfo"><div class="gn">${b.cape}</div><div class="gd">Cape</div></div></div>
-      <div class="gr">${imgTag(ITEM_IDS[b.potion],'pt')}<div class="ginfo"><div class="gn">${b.potion}</div><div class="gd">Potion</div></div></div>
-      <div class="gr">${imgTag(ITEM_IDS[b.food],'fd')}<div class="ginfo"><div class="gn">${b.food}</div><div class="gd">Food</div></div></div>
-    </div>
-    <div class="bsec">
-      <div class="bsec-t">Mount</div>
-      <div class="gr">${imgTag(ITEM_IDS[b.mount],'mt')}<div class="ginfo"><div class="gn">${b.mount}</div><div class="gd">Mount</div></div></div>
+      <!-- Center column: Head, Chest, Shoes -->
+      <div class="insp-col">
+        ${slot(b.head, b.head, headSkills)}
+        ${slot(b.chest, b.chest, chestSkills)}
+        ${slot(b.shoes, b.shoes, shoesSkills)}
+      </div>
+      <!-- Right column: empty, Food, Mount -->
+      <div class="insp-col insp-col-lr">
+        <div class="insp-slot empty"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#6c757d" stroke-width="1"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></div><div class="slot-label">Offhand</div>
+        ${slot(b.food, b.food)}
+        ${slot(b.mount, b.mount)}
+      </div>
     </div>`;
 }
 
@@ -959,7 +1113,7 @@ function showResults() {
   $('rp').innerHTML = `
     <div class="rp-title">Training Complete</div>
     <div class="rp-grade ${gc}">${grade}</div>
-    <div style="color:var(--t2);margin-bottom:8px">${pct}% Accuracy</div>
+    <div style="color:var(--t2);margin-bottom:6px">${pct}% Accuracy</div>
     <div class="rs">
       <div class="rsi"><div class="rv" style="color:var(--green)">${correct}/${total}</div><div class="rl">Correct</div></div>
       <div class="rsi"><div class="rv" style="color:var(--gold)">${S.best}</div><div class="rl">Best Streak</div></div>
