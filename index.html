@@ -2,2770 +2,990 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Albion Online - Inspection Trainer</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x2694;</text></svg>">
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-primary: #0a0e17;
-      --bg-secondary: #111827;
-      --bg-card: #1a2234;
-      --bg-card-hover: #1f2b42;
-      --border-color: #2a3a55;
-      --border-glow: #4a7dff;
-      --text-primary: #e8edf5;
-      --text-secondary: #8899bb;
-      --text-muted: #556688;
-      --accent-gold: #f0b840;
-      --accent-gold-dim: #b8882a;
-      --accent-blue: #4a7dff;
-      --accent-blue-dim: #2a4d99;
-      --accent-green: #22c55e;
-      --accent-green-dim: #166534;
-      --accent-red: #ef4444;
-      --accent-red-dim: #991b1b;
-      --accent-purple: #a855f7;
-      --accent-orange: #f97316;
-      --accent-cyan: #06b6d4;
-      --weapon-melee: #ef4444;
-      --weapon-ranged: #22c55e;
-      --weapon-magic: #4a7dff;
-      --weapon-support: #a855f7;
-      --armor-cloth: #a855f7;
-      --armor-leather: #22c55e;
-      --armor-plate: #4a7dff;
-      --shadow-lg: 0 10px 40px rgba(0,0,0,0.5);
-      --shadow-glow: 0 0 20px rgba(74,125,255,0.3);
+      --bg: #0a0e17; --bg2: #111827; --card: #1a2234; --card2: #1f2b42;
+      --border: #2a3a55; --glow: #4a7dff;
+      --t1: #e8edf5; --t2: #8899bb; --t3: #556688;
+      --gold: #f0b840; --gold-dim: #b8882a;
+      --blue: #4a7dff; --blue-dim: #2a4d99;
+      --green: #22c55e; --green-dim: #166534;
+      --red: #ef4444; --red-dim: #991b1b;
+      --purple: #a855f7; --orange: #f97316; --cyan: #06b6d4;
     }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      background: var(--bg-primary);
-      color: var(--text-primary);
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    /* Animated background */
-    body::before {
-      content: '';
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: 
-        radial-gradient(ellipse at 20% 50%, rgba(74,125,255,0.06) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 20%, rgba(168,85,247,0.05) 0%, transparent 50%),
-        radial-gradient(ellipse at 50% 80%, rgba(240,184,64,0.04) 0%, transparent 50%);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .app-container {
-      position: relative;
-      z-index: 1;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
-      min-height: 100vh;
-    }
+    * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+    body { font-family:system-ui,-apple-system,sans-serif; background:var(--bg); color:var(--t1); min-height:100dvh; overflow-x:hidden; }
+    body::before { content:''; position:fixed; inset:0; background:radial-gradient(ellipse at 20% 50%,rgba(74,125,255,.06) 0%,transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(168,85,247,.05) 0%,transparent 50%); pointer-events:none; z-index:0; }
+    .app { position:relative; z-index:1; max-width:500px; margin:0 auto; padding:8px; min-height:100dvh; }
+    .screen { display:none; } .screen.active { display:block; }
 
     /* Header */
-    .header {
-      text-align: center;
-      padding: 30px 0 20px;
-      border-bottom: 1px solid var(--border-color);
-      margin-bottom: 30px;
-    }
-
-    .header h1 {
-      font-family: 'Cinzel', serif;
-      font-size: 2.4rem;
-      font-weight: 900;
-      background: linear-gradient(135deg, var(--accent-gold) 0%, #ffd700 50%, var(--accent-gold) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      margin-bottom: 8px;
-    }
-
-    .header .subtitle {
-      color: var(--text-secondary);
-      font-size: 0.95rem;
-      font-weight: 300;
-    }
-
-    .header .subtitle a {
-      color: var(--accent-blue);
-      text-decoration: none;
-    }
-
-    .header .subtitle a:hover {
-      text-decoration: underline;
-    }
-
-    /* Screens */
-    .screen { display: none; }
-    .screen.active { display: block; }
-
-    /* Config Screen */
-    .config-panel {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 40px;
-      max-width: 700px;
-      margin: 40px auto;
-      box-shadow: var(--shadow-lg);
-    }
-
-    .config-panel h2 {
-      font-family: 'Cinzel', serif;
-      font-size: 1.5rem;
-      color: var(--accent-gold);
-      margin-bottom: 30px;
-      text-align: center;
-    }
-
-    .config-group {
-      margin-bottom: 24px;
-    }
-
-    .config-group label {
-      display: block;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--text-secondary);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 8px;
-    }
-
-    .config-group .hint {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      margin-top: 4px;
-      font-weight: 400;
-      text-transform: none;
-      letter-spacing: 0;
-    }
-
-    .config-group input[type="range"] {
-      width: 100%;
-      height: 6px;
-      -webkit-appearance: none;
-      appearance: none;
-      background: var(--border-color);
-      border-radius: 3px;
-      outline: none;
-      margin-top: 4px;
-    }
-
-    .config-group input[type="range"]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: var(--accent-gold);
-      cursor: pointer;
-      box-shadow: 0 0 10px rgba(240,184,64,0.4);
-    }
-
-    .config-value {
-      display: inline-block;
-      background: var(--bg-primary);
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      padding: 2px 12px;
-      font-weight: 700;
-      color: var(--accent-gold);
-      font-size: 1rem;
-      margin-left: 10px;
-    }
-
-    .config-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .config-row input[type="range"] {
-      flex: 1;
-    }
-
-    .config-select {
-      width: 100%;
-      padding: 10px 14px;
-      background: var(--bg-primary);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      color: var(--text-primary);
-      font-size: 0.95rem;
-      outline: none;
-      cursor: pointer;
-    }
-
-    .config-select:focus {
-      border-color: var(--accent-blue);
-    }
-
-    .config-checkbox-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 4px;
-    }
-
-    .checkbox-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-      padding: 8px 14px;
-      background: var(--bg-primary);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      transition: all 0.2s;
-      font-size: 0.9rem;
-    }
-
-    .checkbox-item:hover {
-      border-color: var(--accent-blue);
-    }
-
-    .checkbox-item.checked {
-      border-color: var(--accent-blue);
-      background: rgba(74,125,255,0.1);
-    }
-
-    .checkbox-item input[type="checkbox"] {
-      display: none;
-    }
-
-    .checkbox-item .checkmark {
-      width: 18px;
-      height: 18px;
-      border: 2px solid var(--border-color);
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s;
-      font-size: 11px;
-    }
-
-    .checkbox-item.checked .checkmark {
-      background: var(--accent-blue);
-      border-color: var(--accent-blue);
-      color: white;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 14px 32px;
-      border: none;
-      border-radius: 10px;
-      font-family: 'Cinzel', serif;
-      font-size: 1.05rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.3s;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--accent-gold) 0%, #ffd700 100%);
-      color: #1a1000;
-      box-shadow: 0 4px 20px rgba(240,184,64,0.3);
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 30px rgba(240,184,64,0.5);
-    }
-
-    .btn-secondary {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      color: var(--text-primary);
-    }
-
-    .btn-secondary:hover {
-      border-color: var(--accent-blue);
-      background: var(--bg-card-hover);
-    }
-
-    .btn-danger {
-      background: rgba(239,68,68,0.15);
-      border: 1px solid var(--accent-red);
-      color: var(--accent-red);
-    }
-
-    .btn-danger:hover {
-      background: rgba(239,68,68,0.25);
-    }
-
-    .btn-success {
-      background: linear-gradient(135deg, var(--accent-green) 0%, #16a34a 100%);
-      color: white;
-    }
-
-    .btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none !important;
-    }
-
-    /* Training Screen */
-    .training-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 24px;
-      padding: 16px 24px;
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-    }
-
-    .training-stats {
-      display: flex;
-      gap: 24px;
-      align-items: center;
-    }
-
-    .stat-item {
-      text-align: center;
-    }
-
-    .stat-item .stat-label {
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--text-muted);
-    }
-
-    .stat-item .stat-value {
-      font-size: 1.4rem;
-      font-weight: 700;
-    }
-
-    .stat-value.score { color: var(--accent-gold); }
-    .stat-value.round { color: var(--accent-blue); }
-    .stat-value.streak { color: var(--accent-green); }
-
-    /* Timer bar */
-    .timer-bar-container {
-      width: 100%;
-      height: 8px;
-      background: var(--border-color);
-      border-radius: 4px;
-      margin-bottom: 24px;
-      overflow: hidden;
-    }
-
-    .timer-bar {
-      height: 100%;
-      border-radius: 4px;
-      transition: width 0.1s linear;
-      background: linear-gradient(90deg, var(--accent-green) 0%, var(--accent-gold) 50%, var(--accent-red) 100%);
-    }
-
-    .timer-bar.urgent {
-      animation: pulse-bar 0.5s ease-in-out infinite;
-    }
-
-    @keyframes pulse-bar {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.6; }
-    }
-
-    /* Phase indicator */
-    .phase-indicator {
-      text-align: center;
-      margin-bottom: 20px;
-      padding: 12px;
-      border-radius: 10px;
-      font-size: 1rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-    }
-
-    .phase-memorize {
-      background: rgba(74,125,255,0.15);
-      border: 1px solid var(--accent-blue);
-      color: var(--accent-blue);
-    }
-
-    .phase-answer {
-      background: rgba(240,184,64,0.15);
-      border: 1px solid var(--accent-gold);
-      color: var(--accent-gold);
-    }
-
-    .phase-correct {
-      background: rgba(34,197,94,0.15);
-      border: 1px solid var(--accent-green);
-      color: var(--accent-green);
-    }
-
-    .phase-wrong {
-      background: rgba(239,68,68,0.15);
-      border: 1px solid var(--accent-red);
-      color: var(--accent-red);
-    }
-
-    /* Build Display Card */
-    .build-display {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      overflow: hidden;
-      margin-bottom: 24px;
-      box-shadow: var(--shadow-lg);
-    }
-
-    .build-name-bar {
-      padding: 16px 24px;
-      background: linear-gradient(135deg, rgba(74,125,255,0.2) 0%, rgba(168,85,247,0.2) 100%);
-      border-bottom: 1px solid var(--border-color);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .build-name-bar h3 {
-      font-family: 'Cinzel', serif;
-      font-size: 1.2rem;
-      font-weight: 700;
-    }
-
-    .build-content-type {
-      font-size: 0.75rem;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .content-solo-pvp { background: rgba(239,68,68,0.2); color: var(--accent-red); border: 1px solid var(--accent-red-dim); }
-    .content-group-pve { background: rgba(34,197,94,0.2); color: var(--accent-green); border: 1px solid var(--accent-green-dim); }
-    .content-solo-pve { background: rgba(74,125,255,0.2); color: var(--accent-blue); border: 1px solid var(--accent-blue-dim); }
-    .content-group-pvp { background: rgba(168,85,247,0.2); color: var(--accent-purple); border: 1px solid rgba(168,85,247,0.3); }
-    .content-zvz { background: rgba(249,115,22,0.2); color: var(--accent-orange); border: 1px solid rgba(249,115,22,0.3); }
-    .content-small-scale { background: rgba(6,182,212,0.2); color: var(--accent-cyan); border: 1px solid rgba(6,182,212,0.3); }
-    .content-gank { background: rgba(239,68,68,0.2); color: #ff6b6b; border: 1px solid rgba(239,68,68,0.3); }
-    .content-hellgate { background: rgba(168,85,247,0.2); color: #c084fc; border: 1px solid rgba(168,85,247,0.3); }
-    .content-arena { background: rgba(240,184,64,0.2); color: var(--accent-gold); border: 1px solid var(--accent-gold-dim); }
-    .content-avalon { background: rgba(6,182,212,0.2); color: var(--accent-cyan); border: 1px solid rgba(6,182,212,0.3); }
-    .content-open-world { background: rgba(34,197,94,0.2); color: var(--accent-green); border: 1px solid var(--accent-green-dim); }
-
-    .build-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0;
-    }
-
-    @media (max-width: 700px) {
-      .build-grid { grid-template-columns: 1fr; }
-    }
-
-    .build-section {
-      padding: 20px 24px;
-      border-right: 1px solid var(--border-color);
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    .build-section:nth-child(2n) {
-      border-right: none;
-    }
-
-    .build-section:nth-last-child(-n+2) {
-      border-bottom: none;
-    }
-
-    @media (max-width: 700px) {
-      .build-section { border-right: none; }
-      .build-section:nth-last-child(2) { border-bottom: 1px solid var(--border-color); }
-    }
-
-    .build-section-title {
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      color: var(--text-muted);
-      margin-bottom: 12px;
-      font-weight: 600;
-    }
-
-    .gear-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 8px 12px;
-      border-radius: 8px;
-      margin-bottom: 6px;
-      background: rgba(255,255,255,0.02);
-      transition: background 0.2s;
-    }
-
-    .gear-item:hover {
-      background: rgba(255,255,255,0.05);
-    }
-
-    .gear-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.2rem;
-      flex-shrink: 0;
-    }
-
-    .gear-icon.weapon { background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); }
-    .gear-icon.head { background: rgba(74,125,255,0.15); border: 1px solid rgba(74,125,255,0.3); }
-    .gear-icon.chest { background: rgba(34,197,94,0.15); border: 1px solid rgba(34,197,94,0.3); }
-    .gear-icon.shoes { background: rgba(168,85,247,0.15); border: 1px solid rgba(168,85,247,0.3); }
-    .gear-icon.cape { background: rgba(240,184,64,0.15); border: 1px solid rgba(240,184,64,0.3); }
-    .gear-icon.potion { background: rgba(6,182,212,0.15); border: 1px solid rgba(6,182,212,0.3); }
-    .gear-icon.mount { background: rgba(249,115,22,0.15); border: 1px solid rgba(249,115,22,0.3); }
-    .gear-icon.food { background: rgba(251,146,60,0.15); border: 1px solid rgba(251,146,60,0.3); }
-
-    .gear-info {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .gear-name {
-      font-weight: 600;
-      font-size: 0.9rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .gear-detail {
-      font-size: 0.75rem;
-      color: var(--text-secondary);
-    }
-
-    .skill-slots {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .skill-slot {
-      flex: 1;
-      min-width: 120px;
-      padding: 10px 14px;
-      border-radius: 8px;
-      text-align: center;
-    }
-
-    .skill-slot.q-skill { background: rgba(74,125,255,0.1); border: 1px solid rgba(74,125,255,0.3); }
-    .skill-slot.w-skill { background: rgba(168,85,247,0.1); border: 1px solid rgba(168,85,247,0.3); }
-    .skill-slot.e-skill { background: rgba(240,184,64,0.1); border: 1px solid rgba(240,184,64,0.3); }
-    .skill-slot.passive { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.3); }
-
-    .skill-key {
-      font-size: 0.65rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-
-    .q-skill .skill-key { color: var(--accent-blue); }
-    .w-skill .skill-key { color: var(--accent-purple); }
-    .e-skill .skill-key { color: var(--accent-gold); }
-    .passive .skill-key { color: var(--accent-green); }
-
-    .skill-name {
-      font-weight: 600;
-      font-size: 0.85rem;
-    }
-
-    /* Range badge */
-    .range-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 600;
-    }
-
-    .range-melee { background: rgba(239,68,68,0.15); color: var(--accent-red); border: 1px solid rgba(239,68,68,0.3); }
-    .range-medium { background: rgba(240,184,64,0.15); color: var(--accent-gold); border: 1px solid var(--accent-gold-dim); }
-    .range-ranged { background: rgba(74,125,255,0.15); color: var(--accent-blue); border: 1px solid rgba(74,125,255,0.3); }
-
-    /* Hidden state for quiz */
-    .build-display.hidden-info .gear-name,
-    .build-display.hidden-info .skill-name,
-    .build-display.hidden-info .gear-detail {
-      color: transparent;
-      background: var(--border-color);
-      border-radius: 4px;
-      user-select: none;
-    }
-
-    .build-display.hidden-info .range-badge {
-      color: transparent;
-      background: var(--border-color);
-      border-color: var(--border-color);
-    }
-
-    /* Quiz Section */
-    .quiz-panel {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 30px;
-      margin-bottom: 24px;
-      box-shadow: var(--shadow-lg);
-    }
-
-    .quiz-question {
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin-bottom: 20px;
-      color: var(--accent-gold);
-    }
-
-    .quiz-options {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-
-    @media (max-width: 600px) {
-      .quiz-options { grid-template-columns: 1fr; }
-    }
-
-    .quiz-option {
-      padding: 14px 18px;
-      background: var(--bg-primary);
-      border: 2px solid var(--border-color);
-      border-radius: 10px;
-      cursor: pointer;
-      transition: all 0.2s;
-      font-size: 0.95rem;
-      font-weight: 500;
-      text-align: left;
-    }
-
-    .quiz-option:hover:not(.disabled) {
-      border-color: var(--accent-blue);
-      background: rgba(74,125,255,0.08);
-    }
-
-    .quiz-option.selected {
-      border-color: var(--accent-blue);
-      background: rgba(74,125,255,0.15);
-    }
-
-    .quiz-option.correct {
-      border-color: var(--accent-green) !important;
-      background: rgba(34,197,94,0.15) !important;
-      color: var(--accent-green);
-    }
-
-    .quiz-option.wrong {
-      border-color: var(--accent-red) !important;
-      background: rgba(239,68,68,0.15) !important;
-      color: var(--accent-red);
-    }
-
-    .quiz-option.disabled {
-      cursor: not-allowed;
-      opacity: 0.6;
-    }
-
-    .quiz-option .option-key {
-      display: inline-block;
-      width: 24px;
-      height: 24px;
-      line-height: 24px;
-      text-align: center;
-      background: var(--border-color);
-      border-radius: 6px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      margin-right: 10px;
-    }
-
-    .quiz-option.correct .option-key {
-      background: var(--accent-green);
-      color: white;
-    }
-
-    .quiz-option.wrong .option-key {
-      background: var(--accent-red);
-      color: white;
-    }
-
-    /* Multiple questions indicator */
-    .quiz-progress {
-      display: flex;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-
-    .quiz-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: var(--border-color);
-      transition: all 0.3s;
-    }
-
-    .quiz-dot.current {
-      background: var(--accent-gold);
-      box-shadow: 0 0 8px rgba(240,184,64,0.5);
-    }
-
-    .quiz-dot.answered-correct {
-      background: var(--accent-green);
-    }
-
-    .quiz-dot.answered-wrong {
-      background: var(--accent-red);
-    }
-
-    /* Results Screen */
-    .results-panel {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 40px;
-      max-width: 800px;
-      margin: 40px auto;
-      box-shadow: var(--shadow-lg);
-      text-align: center;
-    }
-
-    .results-title {
-      font-family: 'Cinzel', serif;
-      font-size: 2rem;
-      font-weight: 900;
-      margin-bottom: 8px;
-    }
-
-    .results-grade {
-      font-size: 4rem;
-      font-weight: 900;
-      margin: 20px 0;
-      font-family: 'Cinzel', serif;
-    }
-
-    .grade-s { color: var(--accent-gold); text-shadow: 0 0 30px rgba(240,184,64,0.5); }
-    .grade-a { color: var(--accent-green); }
-    .grade-b { color: var(--accent-blue); }
-    .grade-c { color: var(--accent-orange); }
-    .grade-d { color: var(--accent-red); }
-
-    .results-stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-      margin: 30px 0;
-    }
-
-    .results-stat {
-      padding: 20px;
-      background: var(--bg-primary);
-      border-radius: 12px;
-      border: 1px solid var(--border-color);
-    }
-
-    .results-stat .rs-value {
-      font-size: 2rem;
-      font-weight: 700;
-    }
-
-    .results-stat .rs-label {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-top: 4px;
-    }
-
-    .results-breakdown {
-      text-align: left;
-      margin-top: 30px;
-    }
-
-    .results-breakdown h4 {
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--text-muted);
-      margin-bottom: 16px;
-    }
-
-    .breakdown-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 16px;
-      background: var(--bg-primary);
-      border-radius: 8px;
-      margin-bottom: 8px;
-      border: 1px solid var(--border-color);
-    }
-
-    .breakdown-icon {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.85rem;
-      font-weight: 700;
-    }
-
-    .breakdown-icon.correct-icon {
-      background: rgba(34,197,94,0.2);
-      color: var(--accent-green);
-    }
-
-    .breakdown-icon.wrong-icon {
-      background: rgba(239,68,68,0.2);
-      color: var(--accent-red);
-    }
-
-    .breakdown-text {
-      flex: 1;
-    }
-
-    .breakdown-question {
-      font-size: 0.85rem;
-      font-weight: 500;
-    }
-
-    .breakdown-answer {
-      font-size: 0.75rem;
-      color: var(--text-secondary);
-      margin-top: 2px;
-    }
-
-    .results-actions {
-      display: flex;
-      gap: 16px;
-      justify-content: center;
-      margin-top: 30px;
-    }
-
-    /* Countdown overlay */
-    .countdown-overlay {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(10,14,23,0.85);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 100;
-    }
-
-    .countdown-overlay.active {
-      display: flex;
-    }
-
-    .countdown-number {
-      font-family: 'Cinzel', serif;
-      font-size: 8rem;
-      font-weight: 900;
-      color: var(--accent-gold);
-      text-shadow: 0 0 60px rgba(240,184,64,0.5);
-      animation: countdown-pulse 1s ease-in-out;
-    }
-
-    @keyframes countdown-pulse {
-      0% { transform: scale(1.5); opacity: 0; }
-      50% { transform: scale(1); opacity: 1; }
-      100% { transform: scale(0.9); opacity: 0.8; }
-    }
-
-    /* Responsive */
-    @media (max-width: 600px) {
-      .app-container { padding: 10px; }
-      .header h1 { font-size: 1.5rem; }
-      .config-panel { padding: 20px; margin: 20px auto; }
-      .build-grid { grid-template-columns: 1fr; }
-      .build-section { border-right: none !important; }
-      .training-header { flex-direction: column; gap: 12px; }
-      .results-stats { grid-template-columns: 1fr; }
-      .results-actions { flex-direction: column; }
-    }
+    .hdr { text-align:center; padding:12px 0 8px; border-bottom:1px solid var(--border); margin-bottom:8px; }
+    .hdr h1 { font-size:1.2rem; font-weight:900; background:linear-gradient(135deg,var(--gold),#ffd700,var(--gold)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; letter-spacing:2px; text-transform:uppercase; }
+    .hdr .sub { color:var(--t3); font-size:.65rem; } .hdr .sub a { color:var(--blue); text-decoration:none; }
+
+    /* Config */
+    .cfg { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:16px; margin:12px auto; }
+    .cfg h2 { font-size:1rem; color:var(--gold); margin-bottom:12px; text-align:center; }
+    .cg { margin-bottom:14px; }
+    .cg label { display:block; font-size:.7rem; font-weight:600; color:var(--t2); text-transform:uppercase; letter-spacing:1px; margin-bottom:4px; }
+    .cg .hint { font-size:.6rem; color:var(--t3); margin-top:2px; text-transform:none; letter-spacing:0; }
+    .cg input[type=range] { width:100%; height:5px; -webkit-appearance:none; appearance:none; background:var(--border); border-radius:3px; outline:none; }
+    .cg input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:18px; height:18px; border-radius:50%; background:var(--gold); cursor:pointer; box-shadow:0 0 8px rgba(240,184,64,.4); }
+    .crow { display:flex; align-items:center; gap:8px; }
+    .crow input[type=range] { flex:1; }
+    .cval { background:var(--bg); border:1px solid var(--border); border-radius:4px; padding:2px 8px; font-weight:700; color:var(--gold); font-size:.85rem; min-width:32px; text-align:center; }
+    .csel { width:100%; padding:8px; background:var(--bg); border:1px solid var(--border); border-radius:6px; color:var(--t1); font-size:.85rem; outline:none; }
+
+    /* Buttons */
+    .btn { display:inline-flex; align-items:center; justify-content:center; gap:6px; padding:10px 20px; border:none; border-radius:8px; font-size:.85rem; font-weight:700; cursor:pointer; transition:all .2s; text-transform:uppercase; letter-spacing:1px; }
+    .btn-p { background:linear-gradient(135deg,var(--gold),#ffd700); color:#1a1000; box-shadow:0 4px 16px rgba(240,184,64,.3); }
+    .btn-p:hover { transform:translateY(-1px); box-shadow:0 6px 24px rgba(240,184,64,.5); }
+    .btn-s { background:var(--card); border:1px solid var(--border); color:var(--t1); }
+    .btn-s:hover { border-color:var(--blue); }
+    .btn-d { background:rgba(239,68,68,.15); border:1px solid var(--red); color:var(--red); padding:6px 10px; font-size:.7rem; }
+    .btn-g { background:linear-gradient(135deg,var(--green),#16a34a); color:#fff; }
+    .btn:disabled { opacity:.5; cursor:not-allowed; }
+
+    /* Training top bar */
+    .tbar { display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:var(--card); border:1px solid var(--border); border-radius:8px; margin-bottom:6px; }
+    .tstats { display:flex; gap:16px; }
+    .si { text-align:center; }
+    .si .sl { font-size:.55rem; text-transform:uppercase; letter-spacing:1px; color:var(--t3); }
+    .si .sv { font-size:1.1rem; font-weight:700; }
+    .sv.sc { color:var(--gold); } .sv.rn { color:var(--blue); } .sv.sk { color:var(--green); }
+
+    /* Timer */
+    .tbc { width:100%; height:6px; background:var(--border); border-radius:3px; margin-bottom:6px; overflow:hidden; }
+    .tb { height:100%; border-radius:3px; transition:width .1s linear; background:linear-gradient(90deg,var(--green),var(--gold),var(--red)); }
+    .tb.urg { animation:pb .5s ease-in-out infinite; }
+    @keyframes pb { 0%,100%{opacity:1} 50%{opacity:.6} }
+
+    /* Phase */
+    .phase { text-align:center; margin-bottom:6px; padding:8px; border-radius:8px; font-size:.8rem; font-weight:600; text-transform:uppercase; letter-spacing:2px; }
+    .ph-m { background:rgba(74,125,255,.15); border:1px solid var(--blue); color:var(--blue); }
+    .ph-a { background:rgba(240,184,64,.15); border:1px solid var(--gold); color:var(--gold); }
+    .ph-c { background:rgba(34,197,94,.15); border:1px solid var(--green); color:var(--green); }
+    .ph-w { background:rgba(239,68,68,.15); border:1px solid var(--red); color:var(--red); }
+
+    /* Build Card - Compact */
+    .bc { background:var(--card); border:1px solid var(--border); border-radius:10px; overflow:hidden; margin-bottom:6px; }
+    .bc-top { padding:8px 10px; background:linear-gradient(135deg,rgba(74,125,255,.15),rgba(168,85,247,.15)); border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; }
+    .bc-top h3 { font-size:.8rem; font-weight:700; display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+    .bc-ct { font-size:.6rem; padding:2px 8px; border-radius:12px; font-weight:600; text-transform:uppercase; letter-spacing:1px; }
+    .ct-sp { background:rgba(239,68,68,.2); color:var(--red); border:1px solid var(--red-dim); }
+    .ct-gp { background:rgba(34,197,94,.2); color:var(--green); border:1px solid var(--green-dim); }
+    .ct-spv { background:rgba(74,125,255,.2); color:var(--blue); border:1px solid var(--blue-dim); }
+    .ct-gpv { background:rgba(168,85,247,.2); color:var(--purple); border:1px solid rgba(168,85,247,.3); }
+    .ct-zvz { background:rgba(249,115,22,.2); color:var(--orange); border:1px solid rgba(249,115,22,.3); }
+    .ct-ss { background:rgba(6,182,212,.2); color:var(--cyan); border:1px solid rgba(6,182,212,.3); }
+    .ct-gk { background:rgba(239,68,68,.2); color:#ff6b6b; border:1px solid rgba(239,68,68,.3); }
+    .ct-hg { background:rgba(168,85,247,.2); color:#c084fc; border:1px solid rgba(168,85,247,.3); }
+    .ct-ar { background:rgba(240,184,64,.2); color:var(--gold); border:1px solid var(--gold-dim); }
+    .ct-av { background:rgba(6,182,212,.2); color:var(--cyan); border:1px solid rgba(6,182,212,.3); }
+    .ct-ow { background:rgba(34,197,94,.2); color:var(--green); border:1px solid var(--green-dim); }
+
+    /* Gear rows with game images */
+    .bsec { padding:8px 10px; border-bottom:1px solid var(--border); }
+    .bsec:last-child { border-bottom:none; }
+    .bsec-t { font-size:.55rem; text-transform:uppercase; letter-spacing:1.5px; color:var(--t3); margin-bottom:4px; font-weight:600; }
+    .gr { display:flex; align-items:center; gap:6px; padding:3px 0; }
+    .gi { width:32px; height:32px; border-radius:6px; overflow:hidden; flex-shrink:0; background:var(--bg); display:flex; align-items:center; justify-content:center; }
+    .gi img { width:100%; height:100%; object-fit:contain; image-rendering:pixelated; }
+    .gi.wpn { background:rgba(239,68,68,.12); } .gi.hd { background:rgba(74,125,255,.12); }
+    .gi.ch { background:rgba(34,197,94,.12); } .gi.sh { background:rgba(168,85,247,.12); }
+    .gi.cp { background:rgba(240,184,64,.12); } .gi.pt { background:rgba(6,182,212,.12); }
+    .gi.mt { background:rgba(249,115,22,.12); } .gi.fd { background:rgba(251,146,60,.12); }
+    .ginfo { flex:1; min-width:0; }
+    .gn { font-weight:600; font-size:.78rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .gd { font-size:.6rem; color:var(--t2); }
+    .rng { display:inline-flex; align-items:center; gap:4px; padding:2px 8px; border-radius:10px; font-size:.65rem; font-weight:600; }
+    .rng-m { background:rgba(239,68,68,.15); color:var(--red); border:1px solid rgba(239,68,68,.3); }
+    .rng-md { background:rgba(240,184,64,.15); color:var(--gold); border:1px solid var(--gold-dim); }
+    .rng-r { background:rgba(74,125,255,.15); color:var(--blue); border:1px solid rgba(74,125,255,.3); }
+
+    /* Skills row with spell icons */
+    .sk-row { display:flex; gap:4px; margin-top:4px; }
+    .sk { flex:1; padding:4px 6px; border-radius:6px; text-align:center; min-width:0; }
+    .sk-q { background:rgba(74,125,255,.08); border:1px solid rgba(74,125,255,.25); }
+    .sk-w { background:rgba(168,85,247,.08); border:1px solid rgba(168,85,247,.25); }
+    .sk-e { background:rgba(240,184,64,.08); border:1px solid rgba(240,184,64,.25); }
+    .sk-p { background:rgba(34,197,94,.08); border:1px solid rgba(34,197,94,.25); }
+    .sk-k { font-size:.5rem; text-transform:uppercase; letter-spacing:1px; font-weight:700; margin-bottom:2px; }
+    .sk-q .sk-k { color:var(--blue); } .sk-w .sk-k { color:var(--purple); }
+    .sk-e .sk-k { color:var(--gold); } .sk-p .sk-k { color:var(--green); }
+    .sk-ic { width:24px; height:24px; margin:0 auto 2px; border-radius:4px; overflow:hidden; }
+    .sk-ic img { width:100%; height:100%; object-fit:contain; image-rendering:pixelated; }
+    .sk-n { font-weight:600; font-size:.65rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+    /* Hidden state */
+    .bc.hid .gn, .bc.hid .sk-n, .bc.hid .gd { color:transparent; background:var(--border); border-radius:3px; user-select:none; }
+    .bc.hid .rng { color:transparent; background:var(--border); border-color:var(--border); }
+    .bc.hid .sk-ic img { opacity:0; }
+
+    /* Quiz */
+    .qp { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:14px; margin-bottom:8px; }
+    .qq { font-size:.85rem; font-weight:600; margin-bottom:12px; color:var(--gold); line-height:1.4; }
+    .qq .qskill { display:inline-flex; align-items:center; gap:4px; background:rgba(74,125,255,.15); border:1px solid rgba(74,125,255,.3); border-radius:6px; padding:2px 8px; color:var(--blue); font-weight:700; }
+    .qq .qskill img { width:18px; height:18px; border-radius:3px; object-fit:contain; image-rendering:pixelated; }
+    .qo { display:grid; grid-template-columns:1fr; gap:8px; margin-bottom:12px; }
+    .qob { padding:10px 12px; background:var(--bg); border:2px solid var(--border); border-radius:8px; cursor:pointer; transition:all .2s; font-size:.78rem; font-weight:500; text-align:left; line-height:1.3; }
+    .qob:hover:not(.dis) { border-color:var(--blue); background:rgba(74,125,255,.06); }
+    .qob.sel { border-color:var(--blue); background:rgba(74,125,255,.12); }
+    .qob.ok { border-color:var(--green)!important; background:rgba(34,197,94,.12)!important; color:var(--green); }
+    .qob.no { border-color:var(--red)!important; background:rgba(239,68,68,.12)!important; color:var(--red); }
+    .qob.dis { cursor:not-allowed; opacity:.5; }
+    .qob .okk { display:inline-block; width:20px; height:20px; line-height:20px; text-align:center; background:var(--border); border-radius:4px; font-size:.65rem; font-weight:700; margin-right:6px; }
+    .qob.ok .okk { background:var(--green); color:#fff; }
+    .qob.no .okk { background:var(--red); color:#fff; }
+
+    /* Results */
+    .rp { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:20px; margin:16px auto; text-align:center; }
+    .rp-title { font-size:1.3rem; font-weight:900; margin-bottom:4px; }
+    .rp-grade { font-size:3.5rem; font-weight:900; margin:12px 0; font-family:system-ui; }
+    .gs { color:var(--gold); text-shadow:0 0 20px rgba(240,184,64,.5); }
+    .ga { color:var(--green); } .gb { color:var(--blue); } .gc { color:var(--orange); } .gdg { color:var(--red); }
+    .rs { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:16px 0; }
+    .rsi { padding:12px 8px; background:var(--bg); border-radius:8px; border:1px solid var(--border); }
+    .rsi .rv { font-size:1.5rem; font-weight:700; }
+    .rsi .rl { font-size:.6rem; color:var(--t3); text-transform:uppercase; letter-spacing:1px; margin-top:2px; }
+    .rb { text-align:left; margin-top:16px; max-height:40vh; overflow-y:auto; }
+    .rb h4 { font-size:.7rem; text-transform:uppercase; letter-spacing:1px; color:var(--t3); margin-bottom:8px; }
+    .bi { display:flex; align-items:center; gap:8px; padding:8px; background:var(--bg); border-radius:6px; margin-bottom:4px; border:1px solid var(--border); }
+    .bic { width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:.7rem; font-weight:700; flex-shrink:0; }
+    .bic.cic { background:rgba(34,197,94,.2); color:var(--green); }
+    .bic.wic { background:rgba(239,68,68,.2); color:var(--red); }
+    .bit { flex:1; min-width:0; }
+    .biq { font-size:.7rem; font-weight:500; } .bia { font-size:.6rem; color:var(--t2); margin-top:1px; }
+    .ra { display:flex; gap:10px; justify-content:center; margin-top:16px; }
+
+    /* Countdown */
+    .cov { position:fixed; inset:0; background:rgba(10,14,23,.9); display:none; align-items:center; justify-content:center; z-index:100; }
+    .cov.act { display:flex; }
+    .cn { font-size:6rem; font-weight:900; color:var(--gold); text-shadow:0 0 40px rgba(240,184,64,.5); animation:cp 1s ease-in-out; }
+    @keyframes cp { 0%{transform:scale(1.5);opacity:0} 50%{transform:scale(1);opacity:1} 100%{transform:scale(.9);opacity:.8} }
+
+    /* Tree badge */
+    .tb { display:inline-block; padding:1px 6px; border-radius:3px; font-size:.55rem; font-weight:700; text-transform:uppercase; letter-spacing:.5px; }
+    .tb-sword{background:rgba(239,68,68,.15);color:#f87171} .tb-axe{background:rgba(249,115,22,.15);color:#fb923c}
+    .tb-mace{background:rgba(74,125,255,.15);color:#60a5fa} .tb-dagger{background:rgba(168,85,247,.15);color:#c084fc}
+    .tb-qs{background:rgba(239,68,68,.15);color:#f87171} .tb-spear{background:rgba(34,197,94,.15);color:#4ade80}
+    .tb-nature{background:rgba(34,197,94,.15);color:#4ade80} .tb-holy{background:rgba(240,184,64,.15);color:#fbbf24}
+    .tb-fire{background:rgba(249,115,22,.15);color:#fb923c} .tb-frost{background:rgba(6,182,212,.15);color:#22d3ee}
+    .tb-arcane{background:rgba(168,85,247,.15);color:#c084fc} .tb-cursed{background:rgba(168,85,247,.15);color:#a78bfa}
+    .tb-bow{background:rgba(34,197,94,.15);color:#4ade80} .tb-crossbow{background:rgba(74,125,255,.15);color:#60a5fa}
+
+    .fade-in { animation:fi .3s ease; }
+    @keyframes fi { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
 
     /* Scrollbar */
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: var(--bg-primary); }
-    ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
-
-    /* Tooltip */
-    .weapon-tree-badge {
-      display: inline-block;
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-size: 0.7rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .tree-sword { background: rgba(239,68,68,0.15); color: #f87171; }
-    .tree-axe { background: rgba(239,68,68,0.15); color: #fb923c; }
-    .tree-mace { background: rgba(74,125,255,0.15); color: #60a5fa; }
-    .tree-dagger { background: rgba(168,85,247,0.15); color: #c084fc; }
-    .tree-quarterstaff { background: rgba(239,68,68,0.15); color: #f87171; }
-    .tree-spear { background: rgba(34,197,94,0.15); color: #4ade80; }
-    .tree-nature { background: rgba(34,197,94,0.15); color: #4ade80; }
-    .tree-holy { background: rgba(240,184,64,0.15); color: #fbbf24; }
-    .tree-fire { background: rgba(249,115,22,0.15); color: #fb923c; }
-    .tree-frost { background: rgba(6,182,212,0.15); color: #22d3ee; }
-    .tree-arcane { background: rgba(168,85,247,0.15); color: #c084fc; }
-    .tree-cursed { background: rgba(168,85,247,0.15); color: #a78bfa; }
-    .tree-bow { background: rgba(34,197,94,0.15); color: #4ade80; }
-    .tree-crossbow { background: rgba(74,125,255,0.15); color: #60a5fa; }
-
-    /* Fade animations */
-    .fade-in {
-      animation: fadeIn 0.4s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Key hints */
-    .key-hint {
-      display: inline-block;
-      padding: 2px 6px;
-      background: var(--border-color);
-      border-radius: 4px;
-      font-size: 0.7rem;
-      font-weight: 600;
-      color: var(--text-secondary);
-      margin-left: 4px;
-    }
+    ::-webkit-scrollbar { width:4px; } ::-webkit-scrollbar-track { background:var(--bg); }
+    ::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
   </style>
 </head>
 <body>
-  <div class="app-container">
-    <!-- Header -->
-    <header class="header">
-      <h1>Inspection Trainer</h1>
-      <p class="subtitle">Train your ability to quickly recognize Albion Online builds &mdash; <a href="https://albiononlinegrind.com/builds" target="_blank">Reference: AlbionOnlineGrind</a></p>
-    </header>
+<div class="app">
+  <header class="hdr">
+    <h1>Inspection Trainer</h1>
+    <p class="sub">Quick-recognize Albion Online builds &mdash; <a href="https://albiononlinegrind.com/builds" target="_blank">Ref</a></p>
+  </header>
 
-    <!-- Screen: Config -->
-    <div id="screen-config" class="screen active">
-      <div class="config-panel fade-in">
-        <h2>Training Setup</h2>
-
-        <div class="config-group">
-          <label>Display Time (seconds per build)</label>
-          <div class="config-row">
-            <input type="range" id="cfg-display-time" min="2" max="15" value="5" step="1">
-            <span class="config-value" id="cfg-display-time-val">5s</span>
-          </div>
-          <p class="hint">How long you see the build before questions appear</p>
-        </div>
-
-        <div class="config-group">
-          <label>Number of Rounds</label>
-          <div class="config-row">
-            <input type="range" id="cfg-rounds" min="3" max="30" value="10" step="1">
-            <span class="config-value" id="cfg-rounds-val">10</span>
-          </div>
-          <p class="hint">Total builds to inspect and answer</p>
-        </div>
-
-        <div class="config-group">
-          <label>Questions Per Round</label>
-          <div class="config-row">
-            <input type="range" id="cfg-questions" min="1" max="5" value="3" step="1">
-            <span class="config-value" id="cfg-questions-val">3</span>
-          </div>
-          <p class="hint">How many questions to answer per build</p>
-        </div>
-
-        <div class="config-group">
-          <label>Answer Time Limit (seconds)</label>
-          <div class="config-row">
-            <input type="range" id="cfg-answer-time" min="5" max="30" value="10" step="1">
-            <span class="config-value" id="cfg-answer-time-val">10s</span>
-          </div>
-          <p class="hint">Time to answer each question (0 = no limit)</p>
-        </div>
-
-        <div class="config-group">
-          <label>Difficulty</label>
-          <select id="cfg-difficulty" class="config-select">
-            <option value="easy">Easy - 4 choices, obvious distractors</option>
-            <option value="medium" selected>Medium - 4 choices, similar distractors</option>
-            <option value="hard">Hard - 6 choices, very similar distractors</option>
-          </select>
-        </div>
-
-        <div class="config-group">
-          <label>Question Types</label>
-          <div class="config-checkbox-group" id="cfg-question-types">
-            <label class="checkbox-item checked" data-type="weapon">
-              <input type="checkbox" checked>
-              <span class="checkmark">&#10003;</span>
-              Weapon
-            </label>
-            <label class="checkbox-item checked" data-type="qSkill">
-              <input type="checkbox" checked>
-              <span class="checkmark">&#10003;</span>
-              Q Skill
-            </label>
-            <label class="checkbox-item checked" data-type="wSkill">
-              <input type="checkbox" checked>
-              <span class="checkmark">&#10003;</span>
-              W Skill
-            </label>
-            <label class="checkbox-item checked" data-type="eSkill">
-              <input type="checkbox" checked>
-              <span class="checkmark">&#10003;</span>
-              E Skill
-            </label>
-            <label class="checkbox-item checked" data-type="armor">
-              <input type="checkbox" checked>
-              <span class="checkmark">&#10003;</span>
-              Armor
-            </label>
-            <label class="checkbox-item checked" data-type="potion">
-              <input type="checkbox" checked>
-              <span class="checkmark">&#10003;</span>
-              Potion
-            </label>
-            <label class="checkbox-item checked" data-type="attackRange">
-              <input type="checkbox" checked>
-              <span class="checkmark">&#10003;</span>
-              Attack Range
-            </label>
-            <label class="checkbox-item" data-type="passive">
-              <input type="checkbox">
-              <span class="checkmark">&#10003;</span>
-              Passive
-            </label>
-            <label class="checkbox-item" data-type="mount">
-              <input type="checkbox">
-              <span class="checkmark">&#10003;</span>
-              Mount
-            </label>
-          </div>
-        </div>
-
-        <div style="text-align:center; margin-top:30px;">
-          <button class="btn btn-primary" id="btn-start" style="min-width:240px;">
-            Start Training
-          </button>
-        </div>
+  <!-- Config -->
+  <div id="s-cfg" class="screen active">
+    <div class="cfg fade-in">
+      <h2>Training Setup</h2>
+      <div class="cg">
+        <label>Display Time</label>
+        <div class="crow"><input type="range" id="c-dt" min="2" max="15" value="5" step="1"><span class="cval" id="c-dt-v">5s</span></div>
+        <div class="hint">Seconds to memorize the build</div>
       </div>
-    </div>
-
-    <!-- Screen: Training -->
-    <div id="screen-training" class="screen">
-      <div class="training-header">
-        <div class="training-stats">
-          <div class="stat-item">
-            <div class="stat-label">Round</div>
-            <div class="stat-value round" id="stat-round">1/10</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-label">Score</div>
-            <div class="stat-value score" id="stat-score">0</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-label">Streak</div>
-            <div class="stat-value streak" id="stat-streak">0</div>
-          </div>
-        </div>
-        <button class="btn btn-danger" id="btn-quit" style="padding:8px 16px; font-size:0.8rem;">Quit</button>
+      <div class="cg">
+        <label>Rounds</label>
+        <div class="crow"><input type="range" id="c-rn" min="3" max="30" value="10" step="1"><span class="cval" id="c-rn-v">10</span></div>
+        <div class="hint">Total builds to inspect</div>
       </div>
-
-      <div class="timer-bar-container">
-        <div class="timer-bar" id="timer-bar" style="width:100%"></div>
+      <div class="cg">
+        <label>Answer Time</label>
+        <div class="crow"><input type="range" id="c-at" min="5" max="30" value="10" step="1"><span class="cval" id="c-at-v">10s</span></div>
+        <div class="hint">Seconds to answer</div>
       </div>
-
-      <div class="phase-indicator phase-memorize" id="phase-indicator">
-        Memorize the Build
+      <div class="cg">
+        <label>Difficulty</label>
+        <select id="c-diff" class="csel">
+          <option value="easy">Easy &mdash; 3 choices</option>
+          <option value="medium" selected>Medium &mdash; 4 choices</option>
+          <option value="hard">Hard &mdash; 4 choices, similar skills</option>
+        </select>
       </div>
-
-      <!-- Build Display -->
-      <div class="build-display" id="build-display">
-        <!-- Dynamically filled -->
+      <div style="text-align:center;margin-top:16px;">
+        <button class="btn btn-p" id="btn-start" style="width:100%">Start Training</button>
       </div>
-
-      <!-- Quiz Panel -->
-      <div class="quiz-panel" id="quiz-panel" style="display:none;">
-        <div class="quiz-progress" id="quiz-progress"></div>
-        <div class="quiz-question" id="quiz-question"></div>
-        <div class="quiz-options" id="quiz-options"></div>
-        <div style="text-align:center; margin-top:16px;">
-          <button class="btn btn-success" id="btn-next-question" style="display:none;">Next Question</button>
-          <button class="btn btn-primary" id="btn-next-round" style="display:none;">Next Round</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Screen: Results -->
-    <div id="screen-results" class="screen">
-      <div class="results-panel fade-in" id="results-panel">
-        <!-- Dynamically filled -->
-      </div>
-    </div>
-
-    <!-- Countdown Overlay -->
-    <div class="countdown-overlay" id="countdown-overlay">
-      <div class="countdown-number" id="countdown-number">3</div>
     </div>
   </div>
 
-  <script>
-    // ===== ALBION ONLINE BUILDS DATABASE =====
-    const BUILDS = [
-      {
-        name: "Bloodmoon Staff Group Dungeon",
-        contentType: "Group PvE",
-        contentClass: "content-group-pve",
-        weapon: "Bloodmoon Staff",
-        weaponTree: "Nature",
-        weaponTreeClass: "tree-nature",
-        head: "Cultist Cowl",
-        headType: "cloth",
-        chest: "Cultist Robe",
-        chestType: "cloth",
-        shoes: "Cultist Sandals",
-        shoesType: "cloth",
-        cape: "Thetford Cape",
-        potion: "Energy Potion",
-        food: "Beef Stew",
-        mount: "Swamp Salamander",
-        qSkill: "Thorn Slash",
-        wSkill: "Rampant Growth",
-        eSkill: "Bloodmoon",
-        passive: "Pestilence",
-        attackRange: "Ranged",
-        rangeClass: "range-ranged"
-      },
-      {
-        name: "Battleaxe Mist Build",
-        contentType: "Solo PvP",
-        contentClass: "content-solo-pvp",
-        weapon: "Battleaxe",
-        weaponTree: "Axe",
-        weaponTreeClass: "tree-axe",
-        head: "Hunter Hood",
-        headType: "leather",
-        chest: "Stalker Jacket",
-        chestType: "leather",
-        shoes: "Hunter Shoes",
-        shoesType: "leather",
-        cape: "Bridgewatch Cape",
-        potion: "Resistance Potion",
-        food: "Braised Liver",
-        mount: "Swiftclaw",
-        qSkill: "Raging Slash",
-        wSkill: "Adrenaline Boost",
-        eSkill: "Berserk",
-        passive: "Raging Frenzy",
-        attackRange: "Melee",
-        rangeClass: "range-melee"
-      },
-      {
-        name: "Nature Staff Fame Farm",
-        contentType: "Solo PvE",
-        contentClass: "content-solo-pve",
-        weapon: "Nature Staff",
-        weaponTree: "Nature",
-        weaponTreeClass: "tree-nature",
-        head: "Scholar Cowl",
-        headType: "cloth",
-        chest: "Cultist Robe",
-        chestType: "cloth",
-        shoes: "Scholar Sandals",
-        shoesType: "cloth",
-        cape: "Lymhurst Cape",
-        potion: "Healing Potion",
-        food: "Pie",
-        mount: "Mule",
-        qSkill: "Thorn Slash",
-        wSkill: "Nature's Blessing",
-        eSkill: "Rejuvenation",
-        passive: "Pestilence",
-        attackRange: "Ranged",
-        rangeClass: "range-ranged"
-      },
-      {
-        name: "Dual Swords Mist Build",
-        contentType: "Solo PvP",
-        contentClass: "content-solo-pvp",
-        weapon: "Dual Swords",
-        weaponTree: "Sword",
-        weaponTreeClass: "tree-sword",
-        head: "Mercenary Hood",
-        headType: "leather",
-        chest: "Stalker Jacket",
-        chestType: "leather",
-        shoes: "Hunter Shoes",
-        shoesType: "leather",
-        cape: "Martlock Cape",
-        potion: "Resistance Potion",
-        food: "Braised Liver",
-        mount: "Swiftclaw",
-        qSkill: "Cleaving Strike",
-        wSkill: "Interrupt",
-        eSkill: "Ambush",
-        passive: "Swordsmanship",
-        attackRange: "Melee",
-        rangeClass: "range-melee"
-      },
-      {
-        name: "Arcane Staff Corrupted Dungeon",
-        contentType: "Solo PvP",
-        contentClass: "content-solo-pvp",
-        weapon: "Arcane Staff",
-        weaponTree: "Arcane",
-        weaponTreeClass: "tree-arcane",
-        head: "Scholar Cowl",
-        headType: "cloth",
-        chest: "Cultist Robe",
-        chestType: "cloth",
-        shoes: "Royal Sandals",
-        shoesType: "cloth",
-        cape: "Thetford Cape",
-        potion: "Energy Potion",
-        food: "Pie",
-        mount: "Grizzly Bear",
-        qSkill: "Arcane Cursee",
-        wSkill: "Debuff",
-        eSkill: "Immutable Curse",
-        passive: "Arcane Empowerment",
-        attackRange: "Ranged",
-        rangeClass: "range-ranged"
-      },
-      {
-        name: "Blazing Staff DPS Group",
-        contentType: "Group PvE",
-        contentClass: "content-group-pve",
-        weapon: "Blazing Staff",
-        weaponTree: "Fire",
-        weaponTreeClass: "tree-fire",
-        head: "Mage Cowl",
-        headType: "cloth",
-        chest: "Cultist Robe",
-        chestType: "cloth",
-        shoes: "Mage Sandals",
-        shoesType: "cloth",
-        cape: "Thetford Cape",
-        potion: "Energy Potion",
-        food: "Beef Stew",
-        mount: "Riding Horse",
-        qSkill: "Fireball",
-        wSkill: "Flame Pillar",
-        eSkill: "Explosive Staff",
-        passive: "Brimstone",
-        attackRange: "Ranged",
-        rangeClass: "range-ranged"
-      },
-      {
-        name: "Deathgivers Mist Build",
-        contentType: "Solo PvP",
-        contentClass: "content-solo-pvp",
-        weapon: "Deathgivers",
-        weaponTree: "Dagger",
-        weaponTreeClass: "tree-dagger",
-        head: "Stalker Hood",
-        headType: "leather",
-        chest: "Stalker Jacket",
-        chestType: "leather",
-        shoes: "Assassin Shoes",
-        shoesType: "leather",
-        cape: "Bridgewatch Cape",
-        potion: "Resistance Potion",
-        food: "Braised Liver",
-        mount: "Swiftclaw",
-        qSkill: "Rushing Dash",
-        wSkill: "Smoke Bomb",
-        eSkill: "Deathgiver",
-        passive: "Ambush",
-        attackRange: "Melee",
-        rangeClass: "range-melee"
-      },
-      {
-        name: "Quarterstaff Solo PvP & PvE",
-        contentType: "Solo PvP",
-        contentClass: "content-solo-pvp",
-        weapon: "Quarterstaff",
-        weaponTree: "Quarterstaff",
-        weaponTreeClass: "tree-quarterstaff",
-        head: "Mercenary Hood",
-        headType: "leather",
-        chest: "Cleric Robe",
-        chestType: "cloth",
-        shoes: "Hunter Shoes",
-        shoesType: "leather",
-        cape: "Fort Sterling Cape",
-        potion: "Resistance Potion",
-        food: "Braised Liver",
-        mount: "Swiftclaw",
-        qSkill: "High Kick",
-        wSkill: "Staff Strike",
-        eSkill: "Iron Will",
-        passive: "Might",
-        attackRange: "Melee",
-        rangeClass: "range-melee"
-      },
-      {
-        name: "Dagger Pair Solo Gank",
-        contentType: "Gank",
-        contentClass: "content-gank",
-        weapon: "Dagger Pair",
-        weaponTree: "Dagger",
-        weaponTreeClass: "tree-dagger",
-        head: "Assassin Hood",
-        headType: "leather",
-        chest: "Stalker Jacket",
-        chestType: "leather",
-        shoes: "Assassin Shoes",
-        shoesType: "leather",
-        cape: "Bridgewatch Cape",
-        potion: "Poison Potion",
-        food: "Braised Liver",
-        mount: "Swiftclaw",
-        qSkill: "Slashing Strike",
-        wSkill: "Eviscerate",
-        eSkill: "Assassination",
-        passive: "Ambush",
-        attackRange: "Melee",
-        rangeClass: "range-melee"
-      },
-      {
-        name: "Fists of Avalon Mist",
-        contentType: "Solo PvP",
-        contentClass: "content-solo-pvp",
-        weapon: "Fists of Avalon",
-        weaponTree: "Mace",
-        weaponTreeClass: "tree-mace",
-        head: "Cleric Cowl",
-        headType: "cloth",
-        chest: "Stalker Jacket",
-        chestType: "leather",
-        shoes: "Hunter Shoes",
-        shoesType: "leather",
-        cape: "Martlock Cape",
-        potion: "Resistance Potion",
-        food: "Braised Liver",
-        mount: "Swiftclaw",
-        qSkill: "Punching Bag",
-        wSkill: "Rooting Bash",
-        eSkill: "Unstoppable Charge",
-        passive: "Sprint",
-        attackRange: "Melee",
-        rangeClass: "range-melee"
-      },
-      {
-        name: "Light Crossbow Solo Dungeon",
-        contentType: "Solo PvE",
-        contentClass: "content-solo-pve",
-        weapon: "Light Crossbow",
-        weaponTree: "Crossbow",
-        weaponTreeClass: "tree-crossbow",
-        head: "Hunter Hood",
-        headType: "leather",
-        chest: "Cultist Robe",
-        chestType: "cloth",
-        shoes: "Hunter Shoes",
-        shoesType: "leather",
-        cape: "Lymhurst Cape",
-        potion: "Healing Potion",
-        food: "Pie",
-        mount: "Riding Horse",
-        qSkill: "Light Bolt",
-        wSkill: "Vulnerability",
-        eSkill: "Explosive Bolt",
-        passive: "Firing Squad",
-        attackRange: "Ranged",
-        rangeClass: "range-ranged"
-      },
-      {
-        name: "Bear Paws Solo Gank",
-        contentType: "Gank",
-        contentClass: "content-gank",
-        weapon: "Bear Paws",
-        weaponTree: "Axe",
-        weaponTreeClass: "tree-axe",
-        head: "Hunter Hood",
-        headType: "leather",
-        chest: "Stalker Jacket",
-        chestType: "leather",
-        shoes: "Hunter Shoes",
-        shoesType: "leather",
-        cape: "Bridgewatch Cape",
-        potion: "Resistance Potion",
-        food: "Braised Liver",
-        mount: "Swiftclaw",
-        qSkill: "Rending Strike",
-        wSkill: "Adrenaline Boost",
-        eSkill: "Rage of the Bear",
-        passive: "Raging Frenzy",
-        attackRange: "Melee",
-        rangeClass: "range-melee"
-      },
-      {
-        name: "Spear Corrupted Dungeon",
-        contentType: "Solo PvP",
-        contentClass: "content-solo-pvp",
-        weapon: "Spear",
-        weaponTree: "Spear",
-        weaponTreeClass: "tree-spear",
-        head: "Mercenary Hood",
-        headType: "leather",
-        chest: "Stalker Jacket",
-        chestType: "leather",
-        shoes: "Hunter Shoes",
-        shoesType: "leather",
-        cape: "Fort Sterling Cape",
-        potion: "Resistance Potion",
-        food: "Braised Liver",
-        mount: "Swiftclaw",
-        qSkill: "Spear Stab",
-        wSkill: "Spear Hook",
-        eSkill: "Vault",
-        passive: "Sprint",
-        attackRange: "Melee",
-        rangeClass: "range-melee"
-      },
-      {
-        name: "Bow of Badon Corrupted",
-        contentType: "Solo PvP",
-        contentClass: "content-solo-pvp",
-        weapon: "Bow of Badon",
-        weaponTree: "Bow",
-        weaponTreeClass: "tree-bow",
-        head: "Hunter Hood",
-        headType: "leather",
-        chest: "Cultist Robe",
-        chestType: "cloth",
-        shoes: "Hunter Shoes",
-        shoesType: "leather",
-        cape: "Lymhurst Cape",
-        potion: "Resistance Potion",
-        food: "Braised Liver",
-        mount: "Swiftclaw",
-        qSkill: "Multi-Shot",
-        wSkill: "Rain of Arrows",
-        eSkill: "Explosive Arrow",
-        passive: "Firing Squad",
-        attackRange: "Ranged",
-        rangeClass: "range-ranged"
-      },
-      {
-        name: "Cursed Staff Mist",
-        contentType: "Solo PvP",
-        contentClass: "content-solo-pvp",
-        weapon: "Cursed Staff",
-        weaponTree: "Cursed",
-        weaponTreeClass: "tree-cursed",
-        head: "Cleric Cowl",
-        headType: "cloth",
-        chest: "Cultist Robe",
-        chestType: "cloth",
-        shoes: "Royal Sandals",
-        shoesType: "cloth",
-        cape: "Thetford Cape",
-        potion: "Energy Potion",
-        food: "Pie",
-        mount: "Swamp Salamander",
-        qSkill: "Vile Curse",
-        wSkill: "Blight",
-        eSkill: "Skull Fortress",
-        passive: "Death Curse",
-        attackRange: "Ranged",
-        rangeClass: "range-ranged"
-      },
-      {
-        name: "Prowling Staff Mist",
-        contentType: "Solo PvP",
-        contentClass: "content-solo-pvp",
-        weapon: "Prowling Staff",
-        weaponTree: "Nature",
-        weaponTreeClass: "tree-nature",
-        head: "Cleric Cowl",
-        headType: "cloth",
-        chest: "Cultist Robe",
-        chestType: "cloth",
-        shoes: "Scholar Sandals",
-        shoesType: "cloth",
-        cape: "Lymhurst Cape",
-        potion: "Energy Potion",
-        food: "Pie",
-        mount: "Swamp Salamander",
-        qSkill: "Thorn Slash",
-        wSkill: "Nature's Swiftness",
-        eSkill: "Slime",
-        passive: "Pestilence",
-        attackRange: "Ranged",
-        rangeClass: "range-ranged"
-      },
-      {
-        name: "Carving Sword Small Scale",
-        contentType: "Small Scale",
-        contentClass: "content-small-scale",
-        weapon: "Carving Sword",
-        weaponTree: "Sword",
-        weaponTreeClass: "tree-sword",
-        head: "Cleric Cowl",
-        headType: "cloth",
-        chest: "Stalker Jacket",
-        chestType: "leather",
-        shoes: "Hunter Shoes",
-        shoesType: "leather",
-        cape: "Martlock Cape",
-        potion: "Resistance Potion",
-        food: "Braised Liver",
-        mount: "Swiftclaw",
-        qSkill: "Cleaving Strike",
-        wSkill: "Heroic Strike",
-        eSkill: "Carving Strike",
-        passive: "Swordsmanship",
-        attackRange: "Melee",
-        rangeClass: "range-melee"
-      },
-      {
-        name: "Shadowcaller Group Dungeon",
-        contentType: "Group PvE",
-        contentClass: "content-group-pve",
-        weapon: "Shadowcaller",
-        weaponTree: "Cursed",
-        weaponTreeClass: "tree-cursed",
-        head: "Cultist Cowl",
-        headType: "cloth",
-        chest: "Cultist Robe",
-        chestType: "cloth",
-        shoes: "Mage Sandals",
-        shoesType: "cloth",
-        cape: "Thetford Cape",
-        potion: "Energy Potion",
-        food: "Beef Stew",
-        mount: "Riding Horse",
-        qSkill: "Vile Curse",
-        wSkill: "Aggressive Curses",
-        eSkill: "Call of the Dead",
-        passive: "Death Curse",
-        attackRange: "Ranged",
-        rangeClass: "range-ranged"
-      },
-      {
-        name: "Incubus Mace Tank Group",
-        contentType: "Group PvE",
-        contentClass: "content-group-pve",
-        weapon: "Incubus Mace",
-        weaponTree: "Mace",
-        weaponTreeClass: "tree-mace",
-        head: "Knight Helmet",
-        headType: "plate",
-        chest: "Knight Armor",
-        chestType: "plate",
-        shoes: "Knight Boots",
-        shoesType: "plate",
-        cape: "Fort Sterling Cape",
-        potion: "Resistance Potion",
-        food: "Beef Stew",
-        mount: "Armored Horse",
-        qSkill: "Smite",
-        wSkill: "Provoke",
-        eSkill: "Rooting Bash",
-        passive: "Toughness",
-        attackRange: "Melee",
-        rangeClass: "range-melee"
-      },
-      {
-        name: "Fire Staff Corrupted Dungeon",
-        contentType: "Solo PvP",
-        contentClass: "content-solo-pvp",
-        weapon: "Fire Staff",
-        weaponTree: "Fire",
-        weaponTreeClass: "tree-fire",
-        head: "Mage Cowl",
-        headType: "cloth",
-        chest: "Cultist Robe",
-        chestType: "cloth",
-        shoes: "Mage Sandals",
-        shoesType: "cloth",
-        cape: "Thetford Cape",
-        potion: "Energy Potion",
-        food: "Pie",
-        mount: "Riding Horse",
-        qSkill: "Fireball",
-        wSkill: "Flame Pillar",
-        eSkill: "Meteor",
-        passive: "Brimstone",
-        attackRange: "Ranged",
-        rangeClass: "range-ranged"
-      },
-      {
-        name: "Druidic Staff Group Dungeon",
-        contentType: "Group PvE",
-        contentClass: "content-group-pve",
-        weapon: "Druidic Staff",
-        weaponTree: "Nature",
-        weaponTreeClass: "tree-nature",
-        head: "Cleric Cowl",
-        headType: "cloth",
-        chest: "Cultist Robe",
-        chestType: "cloth",
-        shoes: "Royal Sandals",
-        shoesType: "cloth",
-        cape: "Lymhurst Cape",
-        potion: "Energy Potion",
-        food: "Beef Stew",
-        mount: "Riding Horse",
-        qSkill: "Thorn Slash",
-        wSkill: "Nature's Blessing",
-        eSkill: "Wild Growth",
-        passive: "Pestilence",
-        attackRange: "Ranged",
-        rangeClass: "range-ranged"
-      },
-      {
-        name: "Earthrune Staff ZvZ Tank",
-        contentType: "ZvZ",
-        contentClass: "content-zvz",
-        weapon: "Earthrune Staff",
-        weaponTree: "Arcane",
-        weaponTreeClass: "tree-arcane",
-        head: "Knight Helmet",
-        headType: "plate",
-        chest: "Knight Armor",
-        chestType: "plate",
-        shoes: "Knight Boots",
-        shoesType: "plate",
-        cape: "Fort Sterling Cape",
-        potion: "Resistance Potion",
-        food: "Beef Stew",
-        mount: "Armored Horse",
-        qSkill: "Arcane Cursee",
-        wSkill: "Gravity",
-        eSkill: "Rune of Earth",
-        passive: "Arcane Empowerment",
-        attackRange: "Medium",
-        rangeClass: "range-medium"
-      },
-      {
-        name: "Hallowfall Healer",
-        contentType: "Group PvE",
-        contentClass: "content-group-pve",
-        weapon: "Hallowfall",
-        weaponTree: "Holy",
-        weaponTreeClass: "tree-holy",
-        head: "Cleric Cowl",
-        headType: "cloth",
-        chest: "Cultist Robe",
-        chestType: "cloth",
-        shoes: "Royal Sandals",
-        shoesType: "cloth",
-        cape: "Lymhurst Cape",
-        potion: "Energy Potion",
-        food: "Beef Stew",
-        mount: "Riding Horse",
-        qSkill: "Holy Light",
-        wSkill: "Heal",
-        eSkill: "Divine Protection",
-        passive: "Divine Blessing",
-        attackRange: "Ranged",
-        rangeClass: "range-ranged"
-      },
-      {
-        name: "Bloodletter Mist",
-        contentType: "Solo PvP",
-        contentClass: "content-solo-pvp",
-        weapon: "Bloodletter",
-        weaponTree: "Dagger",
-        weaponTreeClass: "tree-dagger",
-        head: "Stalker Hood",
-        headType: "leather",
-        chest: "Stalker Jacket",
-        chestType: "leather",
-        shoes: "Assassin Shoes",
-        shoesType: "leather",
-        cape: "Bridgewatch Cape",
-        potion: "Resistance Potion",
-        food: "Braised Liver",
-        mount: "Swiftclaw",
-        qSkill: "Rushing Dash",
-        wSkill: "Smoke Bomb",
-        eSkill: "Bloodletter",
-        passive: "Ambush",
-        attackRange: "Melee",
-        rangeClass: "range-melee"
-      },
-      {
-        name: "Demonic Staff 2v2 Hellgate",
-        contentType: "Hellgate",
-        contentClass: "content-hellgate",
-        weapon: "Demonic Staff",
-        weaponTree: "Cursed",
-        weaponTreeClass: "tree-cursed",
-        head: "Cleric Cowl",
-        headType: "cloth",
-        chest: "Cultist Robe",
-        chestType: "cloth",
-        shoes: "Royal Sandals",
-        shoesType: "cloth",
-        cape: "Thetford Cape",
-        potion: "Energy Potion",
-        food: "Pie",
-        mount: "Grizzly Bear",
-        qSkill: "Vile Curse",
-        wSkill: "Blight",
-        eSkill: "Demonic Scourge",
-        passive: "Death Curse",
-        attackRange: "Ranged",
-        rangeClass: "range-ranged"
-      },
-      {
-        name: "Infinity Blade Crystal Arena",
-        contentType: "Arena",
-        contentClass: "content-arena",
-        weapon: "Infinity Blade",
-        weaponTree: "Sword",
-        weaponTreeClass: "tree-sword",
-        head: "Cleric Cowl",
-        headType: "cloth",
-        chest: "Stalker Jacket",
-        chestType: "leather",
-        shoes: "Hunter Shoes",
-        shoesType: "leather",
-        cape: "Martlock Cape",
-        potion: "Resistance Potion",
-        food: "Braised Liver",
-        mount: "Swiftclaw",
-        qSkill: "Cleaving Strike",
-        wSkill: "Heroic Strike",
-        eSkill: "Infinity Slash",
-        passive: "Swordsmanship",
-        attackRange: "Melee",
-        rangeClass: "range-melee"
-      },
-      {
-        name: "Boltcasters Solo Dungeon",
-        contentType: "Solo PvE",
-        contentClass: "content-solo-pve",
-        weapon: "Boltcasters",
-        weaponTree: "Crossbow",
-        weaponTreeClass: "tree-crossbow",
-        head: "Hunter Hood",
-        headType: "leather",
-        chest: "Cultist Robe",
-        chestType: "cloth",
-        shoes: "Hunter Shoes",
-        shoesType: "leather",
-        cape: "Lymhurst Cape",
-        potion: "Healing Potion",
-        food: "Pie",
-        mount: "Riding Horse",
-        qSkill: "Multi-Shot",
-        wSkill: "Vulnerability",
-        eSkill: "Power Shot",
-        passive: "Firing Squad",
-        attackRange: "Ranged",
-        rangeClass: "range-ranged"
-      },
-      {
-        name: "Holy Staff Healer Group",
-        contentType: "Group PvE",
-        contentClass: "content-group-pve",
-        weapon: "Holy Staff",
-        weaponTree: "Holy",
-        weaponTreeClass: "tree-holy",
-        head: "Cleric Cowl",
-        headType: "cloth",
-        chest: "Cultist Robe",
-        chestType: "cloth",
-        shoes: "Royal Sandals",
-        shoesType: "cloth",
-        cape: "Lymhurst Cape",
-        potion: "Energy Potion",
-        food: "Beef Stew",
-        mount: "Riding Horse",
-        qSkill: "Holy Light",
-        wSkill: "Heal",
-        eSkill: "Blessed Heal",
-        passive: "Divine Blessing",
-        attackRange: "Ranged",
-        rangeClass: "range-ranged"
-      },
-      {
-        name: "Spirithunter Support Group",
-        contentType: "Group PvE",
-        contentClass: "content-group-pve",
-        weapon: "Spirithunter",
-        weaponTree: "Nature",
-        weaponTreeClass: "tree-nature",
-        head: "Cleric Cowl",
-        headType: "cloth",
-        chest: "Cultist Robe",
-        chestType: "cloth",
-        shoes: "Mage Sandals",
-        shoesType: "cloth",
-        cape: "Lymhurst Cape",
-        potion: "Energy Potion",
-        food: "Beef Stew",
-        mount: "Riding Horse",
-        qSkill: "Thorn Slash",
-        wSkill: "Nature's Swiftness",
-        eSkill: "Spirit Trance",
-        passive: "Pestilence",
-        attackRange: "Ranged",
-        rangeClass: "range-ranged"
-      },
-      {
-        name: "1H Spear Open World",
-        contentType: "Open World",
-        contentClass: "content-open-world",
-        weapon: "1H Spear",
-        weaponTree: "Spear",
-        weaponTreeClass: "tree-spear",
-        head: "Hunter Hood",
-        headType: "leather",
-        chest: "Stalker Jacket",
-        chestType: "leather",
-        shoes: "Hunter Shoes",
-        shoesType: "leather",
-        cape: "Fort Sterling Cape",
-        potion: "Resistance Potion",
-        food: "Braised Liver",
-        mount: "Swiftclaw",
-        qSkill: "Spear Stab",
-        wSkill: "Spear Hook",
-        eSkill: "Vault",
-        passive: "Sprint",
-        attackRange: "Melee",
-        rangeClass: "range-melee"
-      },
-      {
-        name: "Great Frost Group PvP",
-        contentType: "Group PvP",
-        contentClass: "content-group-pvp",
-        weapon: "Great Frost",
-        weaponTree: "Frost",
-        weaponTreeClass: "tree-frost",
-        head: "Mage Cowl",
-        headType: "cloth",
-        chest: "Cultist Robe",
-        chestType: "cloth",
-        shoes: "Mage Sandals",
-        shoesType: "cloth",
-        cape: "Thetford Cape",
-        potion: "Energy Potion",
-        food: "Beef Stew",
-        mount: "Riding Horse",
-        qSkill: "Frost Bolt",
-        wSkill: "Ice Storm",
-        eSkill: "Deep Freeze",
-        passive: "Frostbite",
-        attackRange: "Ranged",
-        rangeClass: "range-ranged"
-      },
-      {
-        name: "Claymore Solo PvP",
-        contentType: "Solo PvP",
-        contentClass: "content-solo-pvp",
-        weapon: "Claymore",
-        weaponTree: "Sword",
-        weaponTreeClass: "tree-sword",
-        head: "Mercenary Hood",
-        headType: "leather",
-        chest: "Stalker Jacket",
-        chestType: "leather",
-        shoes: "Hunter Shoes",
-        shoesType: "leather",
-        cape: "Fort Sterling Cape",
-        potion: "Resistance Potion",
-        food: "Braised Liver",
-        mount: "Swiftclaw",
-        qSkill: "Cleaving Strike",
-        wSkill: "Heroic Strike",
-        eSkill: "Claymore Slash",
-        passive: "Swordsmanship",
-        attackRange: "Melee",
-        rangeClass: "range-melee"
-      },
-      {
-        name: "Ironroot Staff Avalon",
-        contentType: "Avalon",
-        contentClass: "content-avalon",
-        weapon: "Ironroot Staff",
-        weaponTree: "Nature",
-        weaponTreeClass: "tree-nature",
-        head: "Knight Helmet",
-        headType: "plate",
-        chest: "Knight Armor",
-        chestType: "plate",
-        shoes: "Knight Boots",
-        shoesType: "plate",
-        cape: "Fort Sterling Cape",
-        potion: "Resistance Potion",
-        food: "Beef Stew",
-        mount: "Armored Horse",
-        qSkill: "Thorn Slash",
-        wSkill: "Nature's Blessing",
-        eSkill: "Iron Root",
-        passive: "Pestilence",
-        attackRange: "Medium",
-        rangeClass: "range-medium"
-      },
-      {
-        name: "Galatine Pair Small Scale",
-        contentType: "Small Scale",
-        contentClass: "content-small-scale",
-        weapon: "Galatine Pair",
-        weaponTree: "Sword",
-        weaponTreeClass: "tree-sword",
-        head: "Cleric Cowl",
-        headType: "cloth",
-        chest: "Stalker Jacket",
-        chestType: "leather",
-        shoes: "Assassin Shoes",
-        shoesType: "leather",
-        cape: "Martlock Cape",
-        potion: "Resistance Potion",
-        food: "Braised Liver",
-        mount: "Swiftclaw",
-        qSkill: "Cleaving Strike",
-        wSkill: "Interrupt",
-        eSkill: "Galatine Slice",
-        passive: "Swordsmanship",
-        attackRange: "Melee",
-        rangeClass: "range-melee"
-      },
-      {
-        name: "Frost Staff Corrupted",
-        contentType: "Solo PvP",
-        contentClass: "content-solo-pvp",
-        weapon: "Frost Staff",
-        weaponTree: "Frost",
-        weaponTreeClass: "tree-frost",
-        head: "Mage Cowl",
-        headType: "cloth",
-        chest: "Cultist Robe",
-        chestType: "cloth",
-        shoes: "Mage Sandals",
-        shoesType: "cloth",
-        cape: "Thetford Cape",
-        potion: "Energy Potion",
-        food: "Pie",
-        mount: "Riding Horse",
-        qSkill: "Frost Bolt",
-        wSkill: "Ice Storm",
-        eSkill: "Frozen Helix",
-        passive: "Frostbite",
-        attackRange: "Ranged",
-        rangeClass: "range-ranged"
-      },
-      {
-        name: "Heavy Crossbow ZvZ",
-        contentType: "ZvZ",
-        contentClass: "content-zvz",
-        weapon: "Heavy Crossbow",
-        weaponTree: "Crossbow",
-        weaponTreeClass: "tree-crossbow",
-        head: "Cultist Cowl",
-        headType: "cloth",
-        chest: "Cultist Robe",
-        chestType: "cloth",
-        shoes: "Mage Sandals",
-        shoesType: "cloth",
-        cape: "Thetford Cape",
-        potion: "Energy Potion",
-        food: "Beef Stew",
-        mount: "Armored Horse",
-        qSkill: "Light Bolt",
-        wSkill: "Vulnerability",
-        eSkill: "Siege Bolt",
-        passive: "Firing Squad",
-        attackRange: "Ranged",
-        rangeClass: "range-ranged"
-      },
-      {
-        name: "Greataxe ZvZ",
-        contentType: "ZvZ",
-        contentClass: "content-zvz",
-        weapon: "Greataxe",
-        weaponTree: "Axe",
-        weaponTreeClass: "tree-axe",
-        head: "Cultist Cowl",
-        headType: "cloth",
-        chest: "Cultist Robe",
-        chestType: "cloth",
-        shoes: "Mage Sandals",
-        shoesType: "cloth",
-        cape: "Thetford Cape",
-        potion: "Energy Potion",
-        food: "Beef Stew",
-        mount: "Armored Horse",
-        qSkill: "Rending Strike",
-        wSkill: "Whirlwind",
-        eSkill: "Gravitas",
-        passive: "Raging Frenzy",
-        attackRange: "Melee",
-        rangeClass: "range-melee"
-      },
-      {
-        name: "Brimstone Staff ZvZ",
-        contentType: "ZvZ",
-        contentClass: "content-zvz",
-        weapon: "Brimstone Staff",
-        weaponTree: "Fire",
-        weaponTreeClass: "tree-fire",
-        head: "Cultist Cowl",
-        headType: "cloth",
-        chest: "Cultist Robe",
-        chestType: "cloth",
-        shoes: "Mage Sandals",
-        shoesType: "cloth",
-        cape: "Thetford Cape",
-        potion: "Energy Potion",
-        food: "Beef Stew",
-        mount: "Armored Horse",
-        qSkill: "Fireball",
-        wSkill: "Flame Pillar",
-        eSkill: "Brimstone",
-        passive: "Brimstone",
-        attackRange: "Ranged",
-        rangeClass: "range-ranged"
-      },
-      {
-        name: "Halberd Open World",
-        contentType: "Open World",
-        contentClass: "content-open-world",
-        weapon: "Halberd",
-        weaponTree: "Spear",
-        weaponTreeClass: "tree-spear",
-        head: "Hunter Hood",
-        headType: "leather",
-        chest: "Stalker Jacket",
-        chestType: "leather",
-        shoes: "Hunter Shoes",
-        shoesType: "leather",
-        cape: "Fort Sterling Cape",
-        potion: "Resistance Potion",
-        food: "Braised Liver",
-        mount: "Swiftclaw",
-        qSkill: "Spear Stab",
-        wSkill: "Spear Hook",
-        eSkill: "Halberd Swing",
-        passive: "Sprint",
-        attackRange: "Melee",
-        rangeClass: "range-melee"
-      },
-      {
-        name: "Black Monk Staff Gank",
-        contentType: "Gank",
-        contentClass: "content-gank",
-        weapon: "Black Monk Staff",
-        weaponTree: "Quarterstaff",
-        weaponTreeClass: "tree-quarterstaff",
-        head: "Assassin Hood",
-        headType: "leather",
-        chest: "Stalker Jacket",
-        chestType: "leather",
-        shoes: "Assassin Shoes",
-        shoesType: "leather",
-        cape: "Bridgewatch Cape",
-        potion: "Resistance Potion",
-        food: "Braised Liver",
-        mount: "Swiftclaw",
-        qSkill: "High Kick",
-        wSkill: "Staff Strike",
-        eSkill: "Black Monk Kick",
-        passive: "Might",
-        attackRange: "Melee",
-        rangeClass: "range-melee"
+  <!-- Training -->
+  <div id="s-train" class="screen">
+    <div class="tbar">
+      <div class="tstats">
+        <div class="si"><div class="sl">Round</div><div class="sv rn" id="st-rn">1/10</div></div>
+        <div class="si"><div class="sl">Score</div><div class="sv sc" id="st-sc">0</div></div>
+        <div class="si"><div class="sl">Streak</div><div class="sv sk" id="st-sk">0</div></div>
+      </div>
+      <button class="btn btn-d" id="btn-quit">Quit</button>
+    </div>
+    <div class="tbc"><div class="tb" id="tbar" style="width:100%"></div></div>
+    <div class="phase ph-m" id="phase">Memorize</div>
+    <div class="bc" id="bc"></div>
+    <div class="qp" id="qp" style="display:none">
+      <div class="qq" id="qq"></div>
+      <div class="qo" id="qo"></div>
+      <div style="text-align:center"><button class="btn btn-g" id="btn-next" style="display:none;width:100%">Next</button></div>
+    </div>
+  </div>
+
+  <!-- Results -->
+  <div id="s-res" class="screen">
+    <div class="rp fade-in" id="rp"></div>
+  </div>
+
+  <!-- Countdown -->
+  <div class="cov" id="cov"><div class="cn" id="cn">3</div></div>
+</div>
+
+<script>
+// ===== RENDER API =====
+const R_BASE = 'https://render.albiononline.com/v1';
+function itemImg(id) { return `${R_BASE}/item/${encodeURIComponent(id)}.png?locale=en`; }
+function spellImg(name) { return `${R_BASE}/spell/${encodeURIComponent(name)}.png?locale=en`; }
+
+// Item IDs for render API (T5/Adept's format for consistent icons)
+const ITEM_IDS = {
+  'Bloodmoon Staff': "Adept's Bloodmoon Staff",
+  'Battleaxe': "Adept's Battleaxe",
+  'Nature Staff': "Adept's Nature Staff",
+  'Dual Swords': "Adept's Dual Swords",
+  'Arcane Staff': "Adept's Arcane Staff",
+  'Blazing Staff': "Adept's Blazing Staff",
+  'Deathgivers': "Adept's Deathgivers",
+  'Quarterstaff': "Adept's Quarterstaff",
+  'Dagger Pair': "Adept's Dagger Pair",
+  'Fists of Avalon': "Adept's Fists of Avalon",
+  'Light Crossbow': "Adept's Light Crossbow",
+  'Bear Paws': "Adept's Bear Paws",
+  'Spear': "Adept's Spear",
+  'Bow of Badon': "Adept's Bow of Badon",
+  'Cursed Staff': "Adept's Cursed Staff",
+  'Prowling Staff': "Adept's Prowling Staff",
+  'Carving Sword': "Adept's Carving Sword",
+  'Shadowcaller': "Adept's Shadowcaller",
+  'Incubus Mace': "Adept's Incubus Mace",
+  'Fire Staff': "Adept's Fire Staff",
+  'Druidic Staff': "Adept's Druidic Staff",
+  'Earthrune Staff': "Adept's Earthrune Staff",
+  'Hallowfall': "Adept's Hallowfall",
+  'Bloodletter': "Adept's Bloodletter",
+  'Demonic Staff': "Adept's Demonic Staff",
+  'Infinity Blade': "Adept's Infinity Blade",
+  'Boltcasters': "Adept's Boltcasters",
+  'Holy Staff': "Adept's Holy Staff",
+  'Spirithunter': "Adept's Spirithunter",
+  '1H Spear': "Adept's Spear",
+  'Great Frost': "Adept's Great Frost Staff",
+  'Claymore': "Adept's Claymore",
+  'Ironroot Staff': "Adept's Ironroot Staff",
+  'Galatine Pair': "Adept's Galatine Pair",
+  'Frost Staff': "Adept's Frost Staff",
+  'Heavy Crossbow': "Adept's Heavy Crossbow",
+  'Greataxe': "Adept's Greataxe",
+  'Brimstone Staff': "Adept's Brimstone Staff",
+  'Halberd': "Adept's Halberd",
+  'Black Monk Staff': "Adept's Black Monk Staff",
+  // Armor
+  'Cultist Cowl': "Adept's Cultist Cowl",
+  'Hunter Hood': "Adept's Hunter Hood",
+  'Scholar Cowl': "Adept's Scholar Cowl",
+  'Mercenary Hood': "Adept's Mercenary Hood",
+  'Stalker Hood': "Adept's Stalker Hood",
+  'Cleric Cowl': "Adept's Cleric Cowl",
+  'Mage Cowl': "Adept's Mage Cowl",
+  'Assassin Hood': "Adept's Assassin Hood",
+  'Knight Helmet': "Adept's Knight Helmet",
+  'Cultist Robe': "Adept's Cultist Robe",
+  'Stalker Jacket': "Adept's Stalker Jacket",
+  'Cleric Robe': "Adept's Cleric Robe",
+  'Knight Armor': "Adept's Knight Armor",
+  'Cultist Sandals': "Adept's Cultist Sandals",
+  'Hunter Shoes': "Adept's Hunter Shoes",
+  'Scholar Sandals': "Adept's Scholar Sandals",
+  'Royal Sandals': "Adept's Royal Sandals",
+  'Mage Sandals': "Adept's Mage Sandals",
+  'Assassin Shoes': "Adept's Assassin Shoes",
+  'Knight Boots': "Adept's Knight Boots",
+  // Capes
+  'Thetford Cape': "Adept's Thetford Cape",
+  'Bridgewatch Cape': "Adept's Bridgewatch Cape",
+  'Lymhurst Cape': "Adept's Lymhurst Cape",
+  'Martlock Cape': "Adept's Martlock Cape",
+  'Fort Sterling Cape': "Adept's Fort Sterling Cape",
+  // Potions
+  'Energy Potion': "T5_POTION_ENERGY",
+  'Resistance Potion': "T5_POTION_RESIST",
+  'Healing Potion': "T5_POTION_HEAL",
+  'Poison Potion': "T5_POTION_POISON",
+  // Mounts
+  'Swiftclaw': "T5_MOUNT_SWIFTCLAW",
+  'Riding Horse': "T2_MOUNT_HORSE",
+  'Swamp Salamander': "T5_MOUNT_SWAMP_SALAMANDER",
+  'Grizzly Bear': "T5_MOUNT_BEAR",
+  'Armored Horse': "T3_MOUNT_ARMORED_HORSE",
+  'Mule': "T2_MOUNT_OX",
+  // Food
+  'Beef Stew': "T5_MEAL_STEW",
+  'Braised Liver': "T5_MEAL_LIVER",
+  'Pie': "T5_MEAL_PIE",
+};
+
+// ===== SKILL DESCRIPTIONS DATABASE =====
+const SKILL_DESC = {
+  // Nature Staff tree
+  'Rejuvenation': 'Applies a heal-over-time charge to the target ally, restoring health over 8s and stacking up to 3 times',
+  'Thorn Growth': 'Conjures a damaging thorn area at the targeted position that deals magical damage every 0.5s and slows enemies inside',
+  'Thorn Slash': 'Slashes with thorny vines dealing magical damage and applying a slow to the enemy target',
+  'Rampant Growth': 'Creates a growing area of thorns that deals damage and snares enemies caught within',
+  "Nature's Blessing": 'Blesses the targeted ally, increasing their damage resistances and boosting healing received',
+  'Wild Growth': 'Summons a massive thorny growth that knocks up and damages enemies in an area',
+  "Nature's Swiftness": 'Grants move speed and reduces cast time for the caster and nearby allies',
+  'Brambleseed': 'Throws bramble seeds in a line that erupt after a delay, dealing damage and knocking enemies into the air',
+  'Revitalize': 'Channels healing energy on the target ally, restoring health and energy over time while channeling',
+  'Protection of Nature': 'Shields an ally with nature energy, increasing their damage resistances and healing received',
+  'Cleanse Heal': 'Heals allies in an area based on their Rejuvenation charges and cleanses all crowd control effects',
+  'Rejuvenating Breeze': 'Releases a healing breeze from the target that spreads Rejuvenation charges to nearby allies',
+  'Circle of Life': 'Heals allies in a large area around the caster',
+  'Slime': 'Summons a slime pet that attacks nearby enemies',
+  'Iron Root': 'Roots the caster in place and greatly increases damage resistances and healing output',
+  'Spirit Trance': 'Channels to continuously heal and buff nearby allies',
+  'Pestilence': 'Passive: Auto-attacks apply a poison that deals damage over time',
+  'Bloodmoon': 'Transforms the caster into a powerful bloodmoon form, granting new abilities and increased damage',
+  'Prowling': 'Grants stealth and increased movement speed',
+
+  // Axe tree
+  'Rending Strike': 'Strikes the target enemy dealing physical damage and applying a bleed effect that deals damage over time',
+  'Raging Slash': 'Slashes in a wide arc dealing physical damage and applying bleed to all enemies hit',
+  'Rending Spin': 'Spins with the axe, dealing physical damage based on distance and applying bleed charges to all enemies hit',
+  'Adrenaline Boost': 'Releases a burst of adrenaline, increasing all damage by 25%, move speed by 40%, and attack speed for up to 7s',
+  'Berserk': 'Enters a berserk rage, significantly increasing damage output and attack speed for a duration',
+  'Rage of the Bear': 'Charges forward with bear-like fury, dealing massive damage and applying bleed to all enemies in the path',
+  'Deadly Chop': 'Strikes the targeted enemy for heavy physical damage and reduces their damage resistances',
+  'Whirlwind': 'Spins rapidly dealing physical damage to all nearby enemies',
+  'Gravitas': 'Slams the ground dealing massive AoE damage and pulling enemies toward the center',
+  'Raging Frenzy': 'Passive: Each auto-attack increases attack speed, stacking up to a maximum',
+
+  // Sword tree
+  'Heroic Cleave': 'Cleaves in a wide arc, dealing physical damage to all enemies in front of the caster',
+  'Cleaving Strike': 'Strikes in a wide arc hitting multiple enemies in front, dealing physical damage',
+  'Heroic Strike': 'Delivers a powerful strike to the target dealing physical damage',
+  'Interrupt': 'Strikes the target, interrupting their spell cast and dealing physical damage',
+  'Ambush': 'Dashes behind the target, dealing physical damage and briefly increasing your own damage',
+  'Carving Strike': 'Strikes the target dealing physical damage and increasing your own damage for a short time',
+  'Galatine Slice': 'Unleashes a devastating circular slash dealing heavy physical damage to all surrounding enemies',
+  'Claymore Slash': 'Delivers a massive overhead slash dealing heavy physical damage to the target',
+  'Infinity Slash': 'Rapidly slashes the target multiple times, dealing escalating physical damage with each hit',
+  'Iron Will': 'Enters a defensive stance, reducing all damage taken and reflecting a portion back to attackers',
+  'Parry Strike': 'Parries the next incoming attack, negating its damage and stunning the attacker',
+  'Mighty Blow': 'Delivers a powerful blow that deals damage and knocks the target back; resets on kill',
+  'Fearless Strike': 'Charges forward and strikes, dealing damage and increasing move speed',
+  'Crescent Slash': 'Throws a crescent-shaped energy slash at the target, dealing physical damage',
+  'Swordsmanship': 'Passive: Auto-attacks build stacks that increase damage dealt',
+  'Weakening': 'Passive: Auto-attacks reduce the target damage output',
+  'Heroic Fighting': 'Passive: Dealing damage increases move speed briefly',
+
+  // Dagger tree
+  'Sunder Armor': 'Stabs the target dealing physical damage and reducing their damage resistances, stacking up to 3 times',
+  'Slashing Strike': 'Slashes the target with both daggers, dealing physical damage',
+  'Rushing Dash': 'Dashes toward the target position, dealing physical damage and gaining a damage buff',
+  'Dash': 'Dashes toward the targeted position, increasing all damage dealt for a short time',
+  'Deadly Swipe': 'Leaps toward the targeted position, dealing physical damage in an area and gaining damage buffs per enemy hit',
+  'Assassin Spirit': 'Invokes an assassin spirit that periodically grants damage-increasing charges',
+  'Smoke Bomb': 'Throws a smoke bomb at the targeted position, turning you invisible and increasing move speed while inside',
+  'Throwing Blades': 'Throws three piercing blades in a cone, dealing physical damage and buffing your damage and speed per enemy hit',
+  'Chain Slash': 'Charges between nearby enemies hitting up to 3 targets, dealing increasing damage and turning invisible while charging',
+  'Shadow Edge': 'Throws a knife that stuns the first enemy hit and pulls you behind them with CC immunity',
+  'Forbidden Stab': 'Stabs the target, interrupting spell casting and negating healing received briefly',
+  'Bloodletter': 'Stabs the target dealing physical damage based on their missing health, executing low-health enemies',
+  'Deathgiver': 'Teleports behind the target and deals massive physical damage; resets cooldown on kill or assist',
+  'Bloodthirsty Blade': 'Enters a bloodthirsty state, gaining bonus damage on auto-attacks and lifesteal but taking self-damage over time',
+  'Ambush': 'Passive: Entering stealth increases your next attack damage',
+  'Deep Cuts': 'Passive: Every few auto-attacks inflicts a bleed dealing physical damage over time',
+  'Life Leech': 'Passive: Auto-attacks steal a portion of the health the enemy has lost',
+
+  // Quarterstaff tree
+  'High Kick': 'Delivers a high kick to the target dealing physical damage and knocking them back',
+  'Staff Strike': 'Strikes with the staff dealing physical damage and reducing the target damage output',
+  'Punching Bag': 'Unleashes a flurry of punches dealing physical damage to the target',
+  'Rooting Bash': 'Bashes the target dealing physical damage and rooting them in place',
+  'Unstoppable Charge': 'Charges forward, becoming immune to CC and dealing damage to enemies in the path',
+  'Iron Will': 'Enters a defensive stance, greatly reducing damage taken and reflecting damage back',
+  'Black Monk Kick': 'Delivers a devastating flying kick that deals massive physical damage and knocks the target back',
+  'Might': 'Passive: Successfully hitting enemies increases your physical damage',
+
+  // Mace tree
+  'Smite': 'Strikes the target with holy energy dealing physical damage',
+  'Provoke': 'Taunts nearby enemies forcing them to attack you, and increases your damage resistances',
+  'Sprint': 'Passive: Moving increases move speed, building up to a sprint',
+
+  // Spear tree
+  'Spear Stab': 'Thrusts the spear at the target dealing physical damage at extended melee range',
+  'Spear Hook': 'Hooks the target enemy and pulls them toward you, dealing physical damage',
+  'Vault': 'Leaps over the target, dealing physical damage and gaining a brief move speed boost',
+  'Halberd Swing': 'Swings the halberd in a wide arc, dealing physical damage to all enemies in front',
+
+  // Fire tree
+  'Fireball': 'Hurls a fireball at the target dealing magical damage in an area on impact',
+  'Flame Pillar': 'Summons a pillar of flame at the target location, dealing magical damage to enemies inside',
+  'Meteor': 'Calls down a meteor at the target location, dealing massive magical damage after a delay',
+  'Explosive Staff': 'Fires an explosive projectile that detonates on impact dealing magical damage in an area',
+  'Brimstone': 'Passive: Hitting enemies with fire abilities builds brimstone stacks that increase magical damage',
+
+  // Frost tree
+  'Frost Bolt': 'Launches a frost bolt at the target dealing magical damage and applying a slow',
+  'Ice Storm': 'Summons a blizzard at the target location, dealing magical damage and slowing all enemies inside',
+  'Deep Freeze': 'Freezes the target enemy solid, dealing magical damage and stunning them for a duration',
+  'Frozen Helix': 'Launches a spiral of ice that deals magical damage and slows enemies in its path',
+  'Frostbite': 'Passive: Frost abilities apply frostbite stacks that slow enemies and increase frost damage taken',
+
+  // Arcane tree
+  'Arcane Cursee': 'Curses the target with arcane energy dealing magical damage and debuffing them',
+  'Debuff': 'Applies an arcane debuff to the target, reducing their damage output and resistances',
+  'Immutable Curse': 'Places an unbreakable curse on the target, dealing damage and reducing their effectiveness',
+  'Gravity': 'Creates a gravity well that pulls enemies toward the center and slows them',
+  'Rune of Earth': 'Places a protective rune that increases damage resistances of nearby allies',
+  'Arcane Empowerment': 'Passive: Casting spells empowers the next spell, increasing its damage',
+
+  // Cursed tree
+  'Vile Curse': 'Curses the target dealing magical damage and applying a damage-over-time effect that stacks up to 4 times',
+  'Cursed Sickle': 'Launches a sickle projectile that pierces through enemies and returns, applying Vile Curse charges',
+  'Cursed Tar': 'Creates a tar puddle that slows enemies and applies Vile Curse damage-over-time',
+  'Blight': 'Infects the target with blight, dealing magical damage over time and reducing healing received',
+  'Aggressive Curses': 'Curses enemies in an area, dealing damage and reducing their damage output',
+  'Armor Piercer': 'Releases a demonic beam that deals magical damage and significantly reduces damage resistances',
+  'Desecrate': 'Releases a desecrated wave that roots all enemies in an area',
+  'Skull Fortress': 'Creates a protective skull barrier around the caster, absorbing damage and dealing damage to nearby enemies',
+  'Demonic Scourge': 'Channels demonic energy to deal continuous magical damage to the target',
+  'Call of the Dead': 'Summons undead spirits that attack nearby enemies, dealing magical damage',
+  'Death Curse': 'Places a delayed explosive curse on the target dealing damage based on Vile Curse charges',
+  'Bane': 'Passive: Auto-attacks cause demonic explosions dealing AoE magical damage',
+  'Energetic': 'Passive: Each auto-attack restores energy',
+
+  // Holy tree
+  'Holy Light': 'Channels a beam of holy light that heals the targeted ally',
+  'Heal': 'Heals the targeted ally for a moderate amount of health',
+  'Blessed Heal': 'Heals the targeted ally and nearby allies for a significant amount of health',
+  'Divine Protection': 'Shields the targeted ally, absorbing damage and increasing healing received',
+  'Redemption Staff': 'Sends out a healing projectile that bounces between allies',
+  'Fallen Staff': 'Creates a holy zone that continuously heals allies inside',
+  'Divine Blessing': 'Passive: Healing allies grants them increased damage resistances briefly',
+
+  // Bow tree
+  'Multi-Shot': 'Fires multiple arrows in a cone, dealing physical damage to all enemies hit',
+  'Rain of Arrows': 'Fires a volley of arrows into the air that rain down on the target area dealing physical damage',
+  'Explosive Arrow': 'Fires an explosive arrow that detonates on impact dealing physical damage in an area',
+  'Firing Squad': 'Passive: Standing still increases damage and attack speed',
+
+  // Crossbow tree
+  'Light Bolt': 'Fires a quick crossbow bolt at the target dealing physical damage',
+  'Vulnerability': 'Marks the target enemy, reducing their damage resistances and increasing damage taken',
+  'Explosive Bolt': 'Fires an explosive bolt that detonates dealing physical damage in an area on impact',
+  'Power Shot': 'Charges and fires a powerful bolt that deals heavy physical damage to the target',
+  'Siege Bolt': 'Fires a massive bolt that deals heavy physical damage to all enemies in a line',
+};
+
+// ===== BUILDS DATABASE =====
+const BUILDS = [
+  { name:"Bloodmoon Staff Group Dungeon", ct:"Group PvE", cc:"ct-gp", weapon:"Bloodmoon Staff", tree:"Nature", tc:"tb-nature",
+    head:"Cultist Cowl", ht:"cloth", chest:"Cultist Robe", cht:"cloth", shoes:"Cultist Sandals", st:"cloth",
+    cape:"Thetford Cape", potion:"Energy Potion", food:"Beef Stew", mount:"Swamp Salamander",
+    qSkill:"Thorn Slash", wSkill:"Rampant Growth", eSkill:"Bloodmoon", passive:"Pestilence",
+    range:"Ranged", rc:"rng-r" },
+  { name:"Battleaxe Mist Build", ct:"Solo PvP", cc:"ct-sp", weapon:"Battleaxe", tree:"Axe", tc:"tb-axe",
+    head:"Hunter Hood", ht:"leather", chest:"Stalker Jacket", cht:"leather", shoes:"Hunter Shoes", st:"leather",
+    cape:"Bridgewatch Cape", potion:"Resistance Potion", food:"Braised Liver", mount:"Swiftclaw",
+    qSkill:"Raging Slash", wSkill:"Adrenaline Boost", eSkill:"Berserk", passive:"Raging Frenzy",
+    range:"Melee", rc:"rng-m" },
+  { name:"Nature Staff Fame Farm", ct:"Solo PvE", cc:"ct-spv", weapon:"Nature Staff", tree:"Nature", tc:"tb-nature",
+    head:"Scholar Cowl", ht:"cloth", chest:"Cultist Robe", cht:"cloth", shoes:"Scholar Sandals", st:"cloth",
+    cape:"Lymhurst Cape", potion:"Healing Potion", food:"Pie", mount:"Mule",
+    qSkill:"Thorn Slash", wSkill:"Nature's Blessing", eSkill:"Rejuvenation", passive:"Pestilence",
+    range:"Ranged", rc:"rng-r" },
+  { name:"Dual Swords Mist Build", ct:"Solo PvP", cc:"ct-sp", weapon:"Dual Swords", tree:"Sword", tc:"tb-sword",
+    head:"Mercenary Hood", ht:"leather", chest:"Stalker Jacket", cht:"leather", shoes:"Hunter Shoes", st:"leather",
+    cape:"Martlock Cape", potion:"Resistance Potion", food:"Braised Liver", mount:"Swiftclaw",
+    qSkill:"Cleaving Strike", wSkill:"Interrupt", eSkill:"Ambush", passive:"Swordsmanship",
+    range:"Melee", rc:"rng-m" },
+  { name:"Arcane Staff Corrupted", ct:"Solo PvP", cc:"ct-sp", weapon:"Arcane Staff", tree:"Arcane", tc:"tb-arcane",
+    head:"Scholar Cowl", ht:"cloth", chest:"Cultist Robe", cht:"cloth", shoes:"Royal Sandals", st:"cloth",
+    cape:"Thetford Cape", potion:"Energy Potion", food:"Pie", mount:"Grizzly Bear",
+    qSkill:"Arcane Cursee", wSkill:"Debuff", eSkill:"Immutable Curse", passive:"Arcane Empowerment",
+    range:"Ranged", rc:"rng-r" },
+  { name:"Blazing Staff DPS Group", ct:"Group PvE", cc:"ct-gp", weapon:"Blazing Staff", tree:"Fire", tc:"tb-fire",
+    head:"Mage Cowl", ht:"cloth", chest:"Cultist Robe", cht:"cloth", shoes:"Mage Sandals", st:"cloth",
+    cape:"Thetford Cape", potion:"Energy Potion", food:"Beef Stew", mount:"Riding Horse",
+    qSkill:"Fireball", wSkill:"Flame Pillar", eSkill:"Explosive Staff", passive:"Brimstone",
+    range:"Ranged", rc:"rng-r" },
+  { name:"Deathgivers Mist Build", ct:"Solo PvP", cc:"ct-sp", weapon:"Deathgivers", tree:"Dagger", tc:"tb-dagger",
+    head:"Stalker Hood", ht:"leather", chest:"Stalker Jacket", cht:"leather", shoes:"Assassin Shoes", st:"leather",
+    cape:"Bridgewatch Cape", potion:"Resistance Potion", food:"Braised Liver", mount:"Swiftclaw",
+    qSkill:"Rushing Dash", wSkill:"Smoke Bomb", eSkill:"Deathgiver", passive:"Ambush",
+    range:"Melee", rc:"rng-m" },
+  { name:"Quarterstaff Solo PvP", ct:"Solo PvP", cc:"ct-sp", weapon:"Quarterstaff", tree:"Quarterstaff", tc:"tb-qs",
+    head:"Mercenary Hood", ht:"leather", chest:"Cleric Robe", cht:"cloth", shoes:"Hunter Shoes", st:"leather",
+    cape:"Fort Sterling Cape", potion:"Resistance Potion", food:"Braised Liver", mount:"Swiftclaw",
+    qSkill:"High Kick", wSkill:"Staff Strike", eSkill:"Iron Will", passive:"Might",
+    range:"Melee", rc:"rng-m" },
+  { name:"Dagger Pair Solo Gank", ct:"Gank", cc:"ct-gk", weapon:"Dagger Pair", tree:"Dagger", tc:"tb-dagger",
+    head:"Assassin Hood", ht:"leather", chest:"Stalker Jacket", cht:"leather", shoes:"Assassin Shoes", st:"leather",
+    cape:"Bridgewatch Cape", potion:"Poison Potion", food:"Braised Liver", mount:"Swiftclaw",
+    qSkill:"Slashing Strike", wSkill:"Forbidden Stab", eSkill:"Bloodletter", passive:"Deep Cuts",
+    range:"Melee", rc:"rng-m" },
+  { name:"Fists of Avalon Mist", ct:"Solo PvP", cc:"ct-sp", weapon:"Fists of Avalon", tree:"Mace", tc:"tb-mace",
+    head:"Cleric Cowl", ht:"cloth", chest:"Stalker Jacket", cht:"leather", shoes:"Hunter Shoes", st:"leather",
+    cape:"Martlock Cape", potion:"Resistance Potion", food:"Braised Liver", mount:"Swiftclaw",
+    qSkill:"Punching Bag", wSkill:"Rooting Bash", eSkill:"Unstoppable Charge", passive:"Sprint",
+    range:"Melee", rc:"rng-m" },
+  { name:"Light Crossbow Solo Dungeon", ct:"Solo PvE", cc:"ct-spv", weapon:"Light Crossbow", tree:"Crossbow", tc:"tb-crossbow",
+    head:"Hunter Hood", ht:"leather", chest:"Cultist Robe", cht:"cloth", shoes:"Hunter Shoes", st:"leather",
+    cape:"Lymhurst Cape", potion:"Healing Potion", food:"Pie", mount:"Riding Horse",
+    qSkill:"Light Bolt", wSkill:"Vulnerability", eSkill:"Explosive Bolt", passive:"Firing Squad",
+    range:"Ranged", rc:"rng-r" },
+  { name:"Bear Paws Solo Gank", ct:"Gank", cc:"ct-gk", weapon:"Bear Paws", tree:"Axe", tc:"tb-axe",
+    head:"Hunter Hood", ht:"leather", chest:"Stalker Jacket", cht:"leather", shoes:"Hunter Shoes", st:"leather",
+    cape:"Bridgewatch Cape", potion:"Resistance Potion", food:"Braised Liver", mount:"Swiftclaw",
+    qSkill:"Rending Strike", wSkill:"Adrenaline Boost", eSkill:"Rage of the Bear", passive:"Raging Frenzy",
+    range:"Melee", rc:"rng-m" },
+  { name:"Spear Corrupted Dungeon", ct:"Solo PvP", cc:"ct-sp", weapon:"Spear", tree:"Spear", tc:"tb-spear",
+    head:"Mercenary Hood", ht:"leather", chest:"Stalker Jacket", cht:"leather", shoes:"Hunter Shoes", st:"leather",
+    cape:"Fort Sterling Cape", potion:"Resistance Potion", food:"Braised Liver", mount:"Swiftclaw",
+    qSkill:"Spear Stab", wSkill:"Spear Hook", eSkill:"Vault", passive:"Sprint",
+    range:"Melee", rc:"rng-m" },
+  { name:"Bow of Badon Corrupted", ct:"Solo PvP", cc:"ct-sp", weapon:"Bow of Badon", tree:"Bow", tc:"tb-bow",
+    head:"Hunter Hood", ht:"leather", chest:"Cultist Robe", cht:"cloth", shoes:"Hunter Shoes", st:"leather",
+    cape:"Lymhurst Cape", potion:"Resistance Potion", food:"Braised Liver", mount:"Swiftclaw",
+    qSkill:"Multi-Shot", wSkill:"Rain of Arrows", eSkill:"Explosive Arrow", passive:"Firing Squad",
+    range:"Ranged", rc:"rng-r" },
+  { name:"Cursed Staff Mist", ct:"Solo PvP", cc:"ct-sp", weapon:"Cursed Staff", tree:"Cursed", tc:"tb-cursed",
+    head:"Cleric Cowl", ht:"cloth", chest:"Cultist Robe", cht:"cloth", shoes:"Royal Sandals", st:"cloth",
+    cape:"Thetford Cape", potion:"Energy Potion", food:"Pie", mount:"Swamp Salamander",
+    qSkill:"Vile Curse", wSkill:"Blight", eSkill:"Skull Fortress", passive:"Death Curse",
+    range:"Ranged", rc:"rng-r" },
+  { name:"Prowling Staff Mist", ct:"Solo PvP", cc:"ct-sp", weapon:"Prowling Staff", tree:"Nature", tc:"tb-nature",
+    head:"Cleric Cowl", ht:"cloth", chest:"Cultist Robe", cht:"cloth", shoes:"Scholar Sandals", st:"cloth",
+    cape:"Lymhurst Cape", potion:"Energy Potion", food:"Pie", mount:"Swamp Salamander",
+    qSkill:"Thorn Slash", wSkill:"Nature's Swiftness", eSkill:"Slime", passive:"Pestilence",
+    range:"Ranged", rc:"rng-r" },
+  { name:"Carving Sword Small Scale", ct:"Small Scale", cc:"ct-ss", weapon:"Carving Sword", tree:"Sword", tc:"tb-sword",
+    head:"Cleric Cowl", ht:"cloth", chest:"Stalker Jacket", cht:"leather", shoes:"Hunter Shoes", st:"leather",
+    cape:"Martlock Cape", potion:"Resistance Potion", food:"Braised Liver", mount:"Swiftclaw",
+    qSkill:"Cleaving Strike", wSkill:"Heroic Strike", eSkill:"Carving Strike", passive:"Swordsmanship",
+    range:"Melee", rc:"rng-m" },
+  { name:"Shadowcaller Group Dungeon", ct:"Group PvE", cc:"ct-gp", weapon:"Shadowcaller", tree:"Cursed", tc:"tb-cursed",
+    head:"Cultist Cowl", ht:"cloth", chest:"Cultist Robe", cht:"cloth", shoes:"Mage Sandals", st:"cloth",
+    cape:"Thetford Cape", potion:"Energy Potion", food:"Beef Stew", mount:"Riding Horse",
+    qSkill:"Vile Curse", wSkill:"Aggressive Curses", eSkill:"Call of the Dead", passive:"Death Curse",
+    range:"Ranged", rc:"rng-r" },
+  { name:"Incubus Mace Tank Group", ct:"Group PvE", cc:"ct-gp", weapon:"Incubus Mace", tree:"Mace", tc:"tb-mace",
+    head:"Knight Helmet", ht:"plate", chest:"Knight Armor", cht:"plate", shoes:"Knight Boots", st:"plate",
+    cape:"Fort Sterling Cape", potion:"Resistance Potion", food:"Beef Stew", mount:"Armored Horse",
+    qSkill:"Smite", wSkill:"Provoke", eSkill:"Rooting Bash", passive:"Sprint",
+    range:"Melee", rc:"rng-m" },
+  { name:"Fire Staff Corrupted", ct:"Solo PvP", cc:"ct-sp", weapon:"Fire Staff", tree:"Fire", tc:"tb-fire",
+    head:"Mage Cowl", ht:"cloth", chest:"Cultist Robe", cht:"cloth", shoes:"Mage Sandals", st:"cloth",
+    cape:"Thetford Cape", potion:"Energy Potion", food:"Pie", mount:"Riding Horse",
+    qSkill:"Fireball", wSkill:"Flame Pillar", eSkill:"Meteor", passive:"Brimstone",
+    range:"Ranged", rc:"rng-r" },
+  { name:"Druidic Staff Group Dungeon", ct:"Group PvE", cc:"ct-gp", weapon:"Druidic Staff", tree:"Nature", tc:"tb-nature",
+    head:"Cleric Cowl", ht:"cloth", chest:"Cultist Robe", cht:"cloth", shoes:"Royal Sandals", st:"cloth",
+    cape:"Lymhurst Cape", potion:"Energy Potion", food:"Beef Stew", mount:"Riding Horse",
+    qSkill:"Thorn Slash", wSkill:"Nature's Blessing", eSkill:"Wild Growth", passive:"Pestilence",
+    range:"Ranged", rc:"rng-r" },
+  { name:"Earthrune Staff ZvZ Tank", ct:"ZvZ", cc:"ct-zvz", weapon:"Earthrune Staff", tree:"Arcane", tc:"tb-arcane",
+    head:"Knight Helmet", ht:"plate", chest:"Knight Armor", cht:"plate", shoes:"Knight Boots", st:"plate",
+    cape:"Fort Sterling Cape", potion:"Resistance Potion", food:"Beef Stew", mount:"Armored Horse",
+    qSkill:"Arcane Cursee", wSkill:"Gravity", eSkill:"Rune of Earth", passive:"Arcane Empowerment",
+    range:"Medium", rc:"rng-md" },
+  { name:"Hallowfall Healer", ct:"Group PvE", cc:"ct-gp", weapon:"Hallowfall", tree:"Holy", tc:"tb-holy",
+    head:"Cleric Cowl", ht:"cloth", chest:"Cultist Robe", cht:"cloth", shoes:"Royal Sandals", st:"cloth",
+    cape:"Lymhurst Cape", potion:"Energy Potion", food:"Beef Stew", mount:"Riding Horse",
+    qSkill:"Holy Light", wSkill:"Heal", eSkill:"Divine Protection", passive:"Divine Blessing",
+    range:"Ranged", rc:"rng-r" },
+  { name:"Bloodletter Mist", ct:"Solo PvP", cc:"ct-sp", weapon:"Bloodletter", tree:"Dagger", tc:"tb-dagger",
+    head:"Stalker Hood", ht:"leather", chest:"Stalker Jacket", cht:"leather", shoes:"Assassin Shoes", st:"leather",
+    cape:"Bridgewatch Cape", potion:"Resistance Potion", food:"Braised Liver", mount:"Swiftclaw",
+    qSkill:"Rushing Dash", wSkill:"Smoke Bomb", eSkill:"Bloodletter", passive:"Ambush",
+    range:"Melee", rc:"rng-m" },
+  { name:"Demonic Staff 2v2 Hellgate", ct:"Hellgate", cc:"ct-hg", weapon:"Demonic Staff", tree:"Cursed", tc:"tb-cursed",
+    head:"Cleric Cowl", ht:"cloth", chest:"Cultist Robe", cht:"cloth", shoes:"Royal Sandals", st:"cloth",
+    cape:"Thetford Cape", potion:"Energy Potion", food:"Pie", mount:"Grizzly Bear",
+    qSkill:"Vile Curse", wSkill:"Blight", eSkill:"Demonic Scourge", passive:"Death Curse",
+    range:"Ranged", rc:"rng-r" },
+  { name:"Infinity Blade Crystal Arena", ct:"Arena", cc:"ct-ar", weapon:"Infinity Blade", tree:"Sword", tc:"tb-sword",
+    head:"Cleric Cowl", ht:"cloth", chest:"Stalker Jacket", cht:"leather", shoes:"Hunter Shoes", st:"leather",
+    cape:"Martlock Cape", potion:"Resistance Potion", food:"Braised Liver", mount:"Swiftclaw",
+    qSkill:"Cleaving Strike", wSkill:"Heroic Strike", eSkill:"Infinity Slash", passive:"Swordsmanship",
+    range:"Melee", rc:"rng-m" },
+  { name:"Boltcasters Solo Dungeon", ct:"Solo PvE", cc:"ct-spv", weapon:"Boltcasters", tree:"Crossbow", tc:"tb-crossbow",
+    head:"Hunter Hood", ht:"leather", chest:"Cultist Robe", cht:"cloth", shoes:"Hunter Shoes", st:"leather",
+    cape:"Lymhurst Cape", potion:"Healing Potion", food:"Pie", mount:"Riding Horse",
+    qSkill:"Light Bolt", wSkill:"Vulnerability", eSkill:"Power Shot", passive:"Firing Squad",
+    range:"Ranged", rc:"rng-r" },
+  { name:"Holy Staff Healer Group", ct:"Group PvE", cc:"ct-gp", weapon:"Holy Staff", tree:"Holy", tc:"tb-holy",
+    head:"Cleric Cowl", ht:"cloth", chest:"Cultist Robe", cht:"cloth", shoes:"Royal Sandals", st:"cloth",
+    cape:"Lymhurst Cape", potion:"Energy Potion", food:"Beef Stew", mount:"Riding Horse",
+    qSkill:"Holy Light", wSkill:"Heal", eSkill:"Blessed Heal", passive:"Divine Blessing",
+    range:"Ranged", rc:"rng-r" },
+  { name:"Spirithunter Support Group", ct:"Group PvE", cc:"ct-gp", weapon:"Spirithunter", tree:"Nature", tc:"tb-nature",
+    head:"Cleric Cowl", ht:"cloth", chest:"Cultist Robe", cht:"cloth", shoes:"Mage Sandals", st:"cloth",
+    cape:"Lymhurst Cape", potion:"Energy Potion", food:"Beef Stew", mount:"Riding Horse",
+    qSkill:"Thorn Slash", wSkill:"Nature's Swiftness", eSkill:"Spirit Trance", passive:"Pestilence",
+    range:"Ranged", rc:"rng-r" },
+  { name:"1H Spear Open World", ct:"Open World", cc:"ct-ow", weapon:"1H Spear", tree:"Spear", tc:"tb-spear",
+    head:"Hunter Hood", ht:"leather", chest:"Stalker Jacket", cht:"leather", shoes:"Hunter Shoes", st:"leather",
+    cape:"Fort Sterling Cape", potion:"Resistance Potion", food:"Braised Liver", mount:"Swiftclaw",
+    qSkill:"Spear Stab", wSkill:"Spear Hook", eSkill:"Vault", passive:"Sprint",
+    range:"Melee", rc:"rng-m" },
+  { name:"Great Frost Group PvP", ct:"Group PvP", cc:"ct-gpv", weapon:"Great Frost", tree:"Frost", tc:"tb-frost",
+    head:"Mage Cowl", ht:"cloth", chest:"Cultist Robe", cht:"cloth", shoes:"Mage Sandals", st:"cloth",
+    cape:"Thetford Cape", potion:"Energy Potion", food:"Beef Stew", mount:"Riding Horse",
+    qSkill:"Frost Bolt", wSkill:"Ice Storm", eSkill:"Deep Freeze", passive:"Frostbite",
+    range:"Ranged", rc:"rng-r" },
+  { name:"Claymore Solo PvP", ct:"Solo PvP", cc:"ct-sp", weapon:"Claymore", tree:"Sword", tc:"tb-sword",
+    head:"Mercenary Hood", ht:"leather", chest:"Stalker Jacket", cht:"leather", shoes:"Hunter Shoes", st:"leather",
+    cape:"Fort Sterling Cape", potion:"Resistance Potion", food:"Braised Liver", mount:"Swiftclaw",
+    qSkill:"Cleaving Strike", wSkill:"Heroic Strike", eSkill:"Claymore Slash", passive:"Swordsmanship",
+    range:"Melee", rc:"rng-m" },
+  { name:"Ironroot Staff Avalon", ct:"Avalon", cc:"ct-av", weapon:"Ironroot Staff", tree:"Nature", tc:"tb-nature",
+    head:"Knight Helmet", ht:"plate", chest:"Knight Armor", cht:"plate", shoes:"Knight Boots", st:"plate",
+    cape:"Fort Sterling Cape", potion:"Resistance Potion", food:"Beef Stew", mount:"Armored Horse",
+    qSkill:"Thorn Slash", wSkill:"Nature's Blessing", eSkill:"Iron Root", passive:"Pestilence",
+    range:"Medium", rc:"rng-md" },
+  { name:"Galatine Pair Small Scale", ct:"Small Scale", cc:"ct-ss", weapon:"Galatine Pair", tree:"Sword", tc:"tb-sword",
+    head:"Cleric Cowl", ht:"cloth", chest:"Stalker Jacket", cht:"leather", shoes:"Assassin Shoes", st:"leather",
+    cape:"Martlock Cape", potion:"Resistance Potion", food:"Braised Liver", mount:"Swiftclaw",
+    qSkill:"Cleaving Strike", wSkill:"Interrupt", eSkill:"Galatine Slice", passive:"Swordsmanship",
+    range:"Melee", rc:"rng-m" },
+  { name:"Frost Staff Corrupted", ct:"Solo PvP", cc:"ct-sp", weapon:"Frost Staff", tree:"Frost", tc:"tb-frost",
+    head:"Mage Cowl", ht:"cloth", chest:"Cultist Robe", cht:"cloth", shoes:"Mage Sandals", st:"cloth",
+    cape:"Thetford Cape", potion:"Energy Potion", food:"Pie", mount:"Riding Horse",
+    qSkill:"Frost Bolt", wSkill:"Ice Storm", eSkill:"Frozen Helix", passive:"Frostbite",
+    range:"Ranged", rc:"rng-r" },
+  { name:"Heavy Crossbow ZvZ", ct:"ZvZ", cc:"ct-zvz", weapon:"Heavy Crossbow", tree:"Crossbow", tc:"tb-crossbow",
+    head:"Cultist Cowl", ht:"cloth", chest:"Cultist Robe", cht:"cloth", shoes:"Mage Sandals", st:"cloth",
+    cape:"Thetford Cape", potion:"Energy Potion", food:"Beef Stew", mount:"Armored Horse",
+    qSkill:"Light Bolt", wSkill:"Vulnerability", eSkill:"Siege Bolt", passive:"Firing Squad",
+    range:"Ranged", rc:"rng-r" },
+  { name:"Greataxe ZvZ", ct:"ZvZ", cc:"ct-zvz", weapon:"Greataxe", tree:"Axe", tc:"tb-axe",
+    head:"Cultist Cowl", ht:"cloth", chest:"Cultist Robe", cht:"cloth", shoes:"Mage Sandals", st:"cloth",
+    cape:"Thetford Cape", potion:"Energy Potion", food:"Beef Stew", mount:"Armored Horse",
+    qSkill:"Rending Strike", wSkill:"Whirlwind", eSkill:"Gravitas", passive:"Raging Frenzy",
+    range:"Melee", rc:"rng-m" },
+  { name:"Brimstone Staff ZvZ", ct:"ZvZ", cc:"ct-zvz", weapon:"Brimstone Staff", tree:"Fire", tc:"tb-fire",
+    head:"Cultist Cowl", ht:"cloth", chest:"Cultist Robe", cht:"cloth", shoes:"Mage Sandals", st:"cloth",
+    cape:"Thetford Cape", potion:"Energy Potion", food:"Beef Stew", mount:"Armored Horse",
+    qSkill:"Fireball", wSkill:"Flame Pillar", eSkill:"Explosive Staff", passive:"Brimstone",
+    range:"Ranged", rc:"rng-r" },
+  { name:"Halberd Open World", ct:"Open World", cc:"ct-ow", weapon:"Halberd", tree:"Spear", tc:"tb-spear",
+    head:"Hunter Hood", ht:"leather", chest:"Stalker Jacket", cht:"leather", shoes:"Hunter Shoes", st:"leather",
+    cape:"Fort Sterling Cape", potion:"Resistance Potion", food:"Braised Liver", mount:"Swiftclaw",
+    qSkill:"Spear Stab", wSkill:"Spear Hook", eSkill:"Halberd Swing", passive:"Sprint",
+    range:"Melee", rc:"rng-m" },
+  { name:"Black Monk Staff Gank", ct:"Gank", cc:"ct-gk", weapon:"Black Monk Staff", tree:"Quarterstaff", tc:"tb-qs",
+    head:"Assassin Hood", ht:"leather", chest:"Stalker Jacket", cht:"leather", shoes:"Assassin Shoes", st:"leather",
+    cape:"Bridgewatch Cape", potion:"Resistance Potion", food:"Braised Liver", mount:"Swiftclaw",
+    qSkill:"High Kick", wSkill:"Staff Strike", eSkill:"Black Monk Kick", passive:"Might",
+    range:"Melee", rc:"rng-m" },
+];
+
+// ===== STATE =====
+const S = {
+  cfg: { dt:5, rounds:10, at:10, diff:'medium' },
+  round:0, score:0, streak:0, best:0,
+  builds:[], build:null, question:null,
+  phase:'config', timer:null, atimer:null, results:[]
+};
+
+// ===== DOM =====
+const $=id=>document.getElementById(id);
+
+// ===== INIT =====
+function init() {
+  // Sliders
+  [['c-dt','c-dt-v','dt','s'],['c-rn','c-rn-v','rounds',''],['c-at','c-at-v','at','s']].forEach(([sid,vid,key,suf])=>{
+    $(sid).addEventListener('input',()=>{ S.cfg[key]=+$(sid).value; $(vid).textContent=$(sid).value+suf; });
+  });
+  $('c-diff').addEventListener('change',e=>S.cfg.diff=e.target.value);
+  $('btn-start').addEventListener('click',startTraining);
+  $('btn-quit').addEventListener('click',quit);
+  $('btn-next').addEventListener('click',nextRound);
+
+  // Keyboard
+  document.addEventListener('keydown',e=>{
+    if(S.phase==='answer') {
+      const map={a:0,b:1,c:2,d:3};
+      if(map[e.key.toLowerCase()]!==undefined) {
+        const opts=document.querySelectorAll('.qob:not(.dis)');
+        if(opts[map[e.key.toLowerCase()]]) opts[map[e.key.toLowerCase()].click();
       }
-    ];
+    }
+    if(e.key==='Enter') $('btn-next').click();
+  });
+}
 
-    // ===== ALL UNIQUE VALUES FOR GENERATING DISTRACTORS =====
-    const ALL_WEAPONS = [...new Set(BUILDS.map(b => b.weapon))];
-    const ALL_Q_SKILLS = [...new Set(BUILDS.map(b => b.qSkill))];
-    const ALL_W_SKILLS = [...new Set(BUILDS.map(b => b.wSkill))];
-    const ALL_E_SKILLS = [...new Set(BUILDS.map(b => b.eSkill))];
-    const ALL_HEADS = [...new Set(BUILDS.map(b => b.head))];
-    const ALL_CHESTS = [...new Set(BUILDS.map(b => b.chest))];
-    const ALL_SHOES = [...new Set(BUILDS.map(b => b.shoes))];
-    const ALL_POTIONS = [...new Set(BUILDS.map(b => b.potion))];
-    const ALL_PASSIVES = [...new Set(BUILDS.map(b => b.passive))];
-    const ALL_MOUNTS = [...new Set(BUILDS.map(b => b.mount))];
-    const ALL_RANGES = ["Melee", "Medium", "Ranged"];
+function showScreen(id) { ['s-cfg','s-train','s-res'].forEach(s=>$(s).classList.remove('active')); $(id).classList.add('active'); }
 
-    // ===== APP STATE =====
-    const state = {
-      config: {
-        displayTime: 5,
-        rounds: 10,
-        questionsPerRound: 3,
-        answerTime: 10,
-        difficulty: 'medium',
-        questionTypes: ['weapon', 'qSkill', 'wSkill', 'eSkill', 'armor', 'potion', 'attackRange']
-      },
-      currentRound: 0,
-      currentQuestion: 0,
-      score: 0,
-      streak: 0,
-      bestStreak: 0,
-      roundBuilds: [],
-      currentBuild: null,
-      phase: 'config', // config, countdown, memorize, answer, result
-      timer: null,
-      answerTimer: null,
-      results: [],
-      roundQuestions: [],
-      roundResults: []
-    };
+function startTraining() {
+  S.round=0; S.score=0; S.streak=0; S.best=0; S.results=[];
+  const shuffled=[...BUILDS].sort(()=>Math.random()-.5);
+  S.builds=shuffled.slice(0,S.cfg.rounds);
+  showScreen('s-train'); updStats(); countdown();
+}
 
-    // ===== DOM ELEMENTS =====
-    const $ = id => document.getElementById(id);
-    const screenConfig = $('screen-config');
-    const screenTraining = $('screen-training');
-    const screenResults = $('screen-results');
-    const countdownOverlay = $('countdown-overlay');
-    const countdownNumber = $('countdown-number');
-    const timerBar = $('timer-bar');
-    const phaseIndicator = $('phase-indicator');
-    const buildDisplay = $('build-display');
-    const quizPanel = $('quiz-panel');
-    const quizProgress = $('quiz-progress');
-    const quizQuestion = $('quiz-question');
-    const quizOptions = $('quiz-options');
-    const btnStart = $('btn-start');
-    const btnQuit = $('btn-quit');
-    const btnNextQ = $('btn-next-question');
-    const btnNextRound = $('btn-next-round');
+function countdown() {
+  $('cov').classList.add('act'); let c=3; $('cn').textContent=c;
+  const iv=setInterval(()=>{
+    c--;
+    if(c>0){ $('cn').textContent=c; $('cn').style.animation='none'; void $('cn').offsetWidth; $('cn').style.animation='cp 1s ease-in-out'; }
+    else{ clearInterval(iv); $('cov').classList.remove('act'); startRound(); }
+  },800);
+}
 
-    // ===== CONFIG SETUP =====
-    function setupConfig() {
-      // Sliders
-      const sliders = [
-        { id: 'cfg-display-time', valId: 'cfg-display-time-val', key: 'displayTime', suffix: 's' },
-        { id: 'cfg-rounds', valId: 'cfg-rounds-val', key: 'rounds', suffix: '' },
-        { id: 'cfg-questions', valId: 'cfg-questions-val', key: 'questionsPerRound', suffix: '' },
-        { id: 'cfg-answer-time', valId: 'cfg-answer-time-val', key: 'answerTime', suffix: 's' }
-      ];
+function startRound() {
+  S.round++; S.build=S.builds[S.round-1];
+  updStats(); renderBuild(S.build,false); showMemorize();
+}
 
-      sliders.forEach(s => {
-        const slider = $(s.id);
-        const valEl = $(s.valId);
-        slider.addEventListener('input', () => {
-          state.config[s.key] = parseInt(slider.value);
-          valEl.textContent = slider.value + s.suffix;
-        });
+function showMemorize() {
+  S.phase='memorize';
+  $('qp').style.display='none';
+  $('phase').className='phase ph-m'; $('phase').textContent=`Memorize (${S.cfg.dt}s)`;
+  $('bc').classList.remove('hid');
+  let left=S.cfg.dt; $('tbar').style.width='100%'; $('tbar').classList.remove('urg');
+  S.timer=setInterval(()=>{
+    left-=.1; const p=Math.max(0,left/S.cfg.dt*100); $('tbar').style.width=p+'%';
+    if(p<30)$('tbar').classList.add('urg');
+    if(left<=0){ clearInterval(S.timer); showAnswer(); }
+  },100);
+}
+
+function showAnswer() {
+  S.phase='answer';
+  $('bc').classList.add('hid');
+  $('phase').className='phase ph-a'; $('phase').textContent='What does this skill do?';
+  $('tbar').style.width='100%'; $('tbar').classList.remove('urg');
+  S.question=genQuestion(S.build);
+  $('qp').style.display='block'; $('qp').classList.add('fade-in');
+  $('btn-next').style.display='none';
+  renderQuestion();
+
+  if(S.cfg.at>0) {
+    let left=S.cfg.at;
+    S.atimer=setInterval(()=>{
+      left-=.1; const p=Math.max(0,left/S.cfg.at*100); $('tbar').style.width=p+'%';
+      if(p<30)$('tbar').classList.add('urg');
+      if(left<=0){ clearInterval(S.atimer); handleTimeout(); }
+    },100);
+  }
+}
+
+function genQuestion(build) {
+  // Pick a random skill from Q/W/E
+  const skills = [
+    { slot:'Q', name:build.qSkill },
+    { slot:'W', name:build.wSkill },
+    { slot:'E', name:build.eSkill }
+  ];
+  const pick = skills[Math.floor(Math.random()*skills.length)];
+  const correctDesc = SKILL_DESC[pick.name] || 'Deals damage to the target enemy';
+
+  // Get distractor descriptions from other skills
+  const allDescs = Object.values(SKILL_DESC).filter(d => d !== correctDesc);
+  const shuffledDescs = allDescs.sort(()=>Math.random()-.5);
+  const numOpts = S.cfg.diff==='easy'?3:4;
+
+  // For hard mode, try to pick descriptions from the same weapon tree
+  let distractors;
+  if(S.cfg.diff==='hard') {
+    // Get skill names from same tree builds
+    const sameTree = BUILDS.filter(b=>b.tree===build.tree);
+    const sameTreeSkills = [];
+    sameTree.forEach(b=>{
+      [b.qSkill,b.wSkill,b.eSkill].forEach(sk=>{
+        if(sk!==pick.name && SKILL_DESC[sk]) sameTreeSkills.push(SKILL_DESC[sk]);
       });
-
-      // Difficulty
-      $('cfg-difficulty').addEventListener('change', (e) => {
-        state.config.difficulty = e.target.value;
-      });
-
-      // Question types checkboxes
-      document.querySelectorAll('.checkbox-item').forEach(item => {
-        item.addEventListener('click', () => {
-          const cb = item.querySelector('input[type="checkbox"]');
-          cb.checked = !cb.checked;
-          item.classList.toggle('checked', cb.checked);
-          updateQuestionTypes();
-        });
-      });
-
-      // Start button
-      btnStart.addEventListener('click', startTraining);
-      btnQuit.addEventListener('click', quitTraining);
-      btnNextQ.addEventListener('click', nextQuestion);
-      btnNextRound.addEventListener('click', nextRound);
-    }
-
-    function updateQuestionTypes() {
-      const types = [];
-      document.querySelectorAll('.checkbox-item').forEach(item => {
-        const cb = item.querySelector('input[type="checkbox"]');
-        if (cb.checked) types.push(item.dataset.type);
-      });
-      state.config.questionTypes = types;
-    }
-
-    // ===== SCREEN MANAGEMENT =====
-    function showScreen(screen) {
-      [screenConfig, screenTraining, screenResults].forEach(s => s.classList.remove('active'));
-      screen.classList.add('active');
-    }
-
-    // ===== TRAINING FLOW =====
-    function startTraining() {
-      if (state.config.questionTypes.length === 0) {
-        alert('Please select at least one question type!');
-        return;
-      }
-
-      // Reset state
-      state.currentRound = 0;
-      state.score = 0;
-      state.streak = 0;
-      state.bestStreak = 0;
-      state.results = [];
-
-      // Pick random builds (no repeats if possible)
-      const shuffled = [...BUILDS].sort(() => Math.random() - 0.5);
-      state.roundBuilds = shuffled.slice(0, state.config.rounds);
-
-      showScreen(screenTraining);
-      updateStats();
-      startCountdown();
-    }
-
-    function startCountdown() {
-      countdownOverlay.classList.add('active');
-      let count = 3;
-      countdownNumber.textContent = count;
-      
-      const interval = setInterval(() => {
-        count--;
-        if (count > 0) {
-          countdownNumber.textContent = count;
-          countdownNumber.style.animation = 'none';
-          void countdownNumber.offsetWidth;
-          countdownNumber.style.animation = 'countdown-pulse 1s ease-in-out';
-        } else {
-          clearInterval(interval);
-          countdownOverlay.classList.remove('active');
-          startRound();
-        }
-      }, 1000);
-    }
-
-    function startRound() {
-      state.currentRound++;
-      state.currentQuestion = 0;
-      state.roundResults = [];
-      state.currentBuild = state.roundBuilds[state.currentRound - 1];
-
-      updateStats();
-      renderBuild(state.currentBuild, false);
-      showMemorizePhase();
-    }
-
-    function showMemorizePhase() {
-      state.phase = 'memorize';
-      quizPanel.style.display = 'none';
-      phaseIndicator.className = 'phase-indicator phase-memorize';
-      phaseIndicator.textContent = `Memorize the Build (${state.config.displayTime}s)`;
-      buildDisplay.classList.remove('hidden-info');
-
-      // Timer bar
-      let timeLeft = state.config.displayTime;
-      timerBar.style.width = '100%';
-      timerBar.classList.remove('urgent');
-
-      state.timer = setInterval(() => {
-        timeLeft -= 0.1;
-        const pct = Math.max(0, (timeLeft / state.config.displayTime) * 100);
-        timerBar.style.width = pct + '%';
-
-        if (pct < 30) timerBar.classList.add('urgent');
-
-        if (timeLeft <= 0) {
-          clearInterval(state.timer);
-          showAnswerPhase();
-        }
-      }, 100);
-    }
-
-    function showAnswerPhase() {
-      state.phase = 'answer';
-      buildDisplay.classList.add('hidden-info');
-      phaseIndicator.className = 'phase-indicator phase-answer';
-      phaseIndicator.textContent = 'Answer the Questions';
-      timerBar.style.width = '100%';
-      timerBar.classList.remove('urgent');
-
-      // Generate questions for this round
-      state.roundQuestions = generateQuestions(state.currentBuild, state.config.questionsPerRound);
-      state.currentQuestion = 0;
-
-      quizPanel.style.display = 'block';
-      quizPanel.classList.add('fade-in');
-      showQuestion();
-    }
-
-    function generateQuestions(build, count) {
-      const questions = [];
-      const types = [...state.config.questionTypes].sort(() => Math.random() - 0.5);
-
-      for (let i = 0; i < count; i++) {
-        const type = types[i % types.length];
-        questions.push(generateQuestion(build, type));
-      }
-
-      return questions;
-    }
-
-    function generateQuestion(build, type) {
-      const difficulty = state.config.difficulty;
-      let numOptions = difficulty === 'easy' ? 4 : difficulty === 'medium' ? 4 : 6;
-
-      switch (type) {
-        case 'weapon':
-          return createQuestion('What weapon does this build use?', build.weapon, ALL_WEAPONS, numOptions, build.weaponTree);
-        case 'qSkill':
-          return createQuestion('What is the Q skill of this build?', build.qSkill, ALL_Q_SKILLS, numOptions);
-        case 'wSkill':
-          return createQuestion('What is the W skill of this build?', build.wSkill, ALL_W_SKILLS, numOptions);
-        case 'eSkill':
-          return createQuestion('What is the E skill of this build?', build.eSkill, ALL_E_SKILLS, numOptions);
-        case 'armor':
-          const armorQs = [
-            { q: 'What head armor does this build use?', a: build.head, pool: ALL_HEADS },
-            { q: 'What chest armor does this build use?', a: build.chest, pool: ALL_CHESTS },
-            { q: 'What shoes does this build use?', a: build.shoes, pool: ALL_SHOES }
-          ];
-          const pick = armorQs[Math.floor(Math.random() * armorQs.length)];
-          return createQuestion(pick.q, pick.a, pick.pool, numOptions);
-        case 'potion':
-          return createQuestion('What potion does this build use?', build.potion, ALL_POTIONS, numOptions);
-        case 'attackRange':
-          return createQuestion('What is the attack range of this build?', build.attackRange, ALL_RANGES, numOptions);
-        case 'passive':
-          return createQuestion('What is the passive of this build?', build.passive, ALL_PASSIVES, numOptions);
-        case 'mount':
-          return createQuestion('What mount does this build use?', build.mount, ALL_MOUNTS, numOptions);
-        default:
-          return createQuestion('What weapon does this build use?', build.weapon, ALL_WEAPONS, numOptions);
-      }
-    }
-
-    function createQuestion(question, correctAnswer, pool, numOptions, hint) {
-      // Get distractors from same pool, avoiding the correct answer
-      let distractors = pool.filter(a => a !== correctAnswer);
-
-      // For medium/hard difficulty, try to pick similar items
-      if (state.config.difficulty !== 'easy' && pool.length > 10) {
-        // Try to find same weapon tree items
-        // Just shuffle for now - similarity is natural from the pool
-        distractors = distractors.sort(() => Math.random() - 0.5);
-      } else {
-        distractors = distractors.sort(() => Math.random() - 0.5);
-      }
-
-      const options = [correctAnswer, ...distractors.slice(0, numOptions - 1)];
-      // Shuffle options
-      options.sort(() => Math.random() - 0.5);
-
-      return {
-        question: hint ? `${question} <span class="weapon-tree-badge ${getTreeClass(hint)}">${hint}</span>` : question,
-        options,
-        correctAnswer,
-        type: typeof hint === 'string' && ['Sword','Axe','Mace','Dagger','Quarterstaff','Spear','Nature','Holy','Fire','Frost','Arcane','Cursed','Bow','Crossbow'].includes(hint) ? 'weapon' : 'general'
-      };
-    }
-
-    function getTreeClass(tree) {
-      const map = {
-        'Sword': 'tree-sword', 'Axe': 'tree-axe', 'Mace': 'tree-mace',
-        'Dagger': 'tree-dagger', 'Quarterstaff': 'tree-quarterstaff',
-        'Spear': 'tree-spear', 'Nature': 'tree-nature', 'Holy': 'tree-holy',
-        'Fire': 'tree-fire', 'Frost': 'tree-frost', 'Arcane': 'tree-arcane',
-        'Cursed': 'tree-cursed', 'Bow': 'tree-bow', 'Crossbow': 'tree-crossbow'
-      };
-      return map[tree] || '';
-    }
-
-    function showQuestion() {
-      const q = state.roundQuestions[state.currentQuestion];
-
-      // Update progress dots
-      quizProgress.innerHTML = '';
-      state.roundQuestions.forEach((_, i) => {
-        const dot = document.createElement('div');
-        dot.className = 'quiz-dot';
-        if (i === state.currentQuestion) dot.classList.add('current');
-        if (i < state.currentQuestion) {
-          dot.classList.add(state.roundResults[i] ? 'answered-correct' : 'answered-wrong');
-        }
-        quizProgress.appendChild(dot);
-      });
-
-      quizQuestion.innerHTML = `Q${state.currentQuestion + 1}: ${q.question}`;
-
-      // Render options
-      const keys = ['A', 'B', 'C', 'D', 'E', 'F'];
-      quizOptions.innerHTML = '';
-      q.options.forEach((opt, i) => {
-        const btn = document.createElement('button');
-        btn.className = 'quiz-option';
-        btn.innerHTML = `<span class="option-key">${keys[i]}</span>${opt}`;
-        btn.addEventListener('click', () => handleAnswer(opt, btn));
-        quizOptions.appendChild(btn);
-      });
-
-      btnNextQ.style.display = 'none';
-      btnNextRound.style.display = 'none';
-
-      // Answer timer
-      if (state.config.answerTime > 0) {
-        let answerTimeLeft = state.config.answerTime;
-        timerBar.style.width = '100%';
-        timerBar.classList.remove('urgent');
-
-        clearInterval(state.answerTimer);
-        state.answerTimer = setInterval(() => {
-          answerTimeLeft -= 0.1;
-          const pct = Math.max(0, (answerTimeLeft / state.config.answerTime) * 100);
-          timerBar.style.width = pct + '%';
-          if (pct < 30) timerBar.classList.add('urgent');
-
-          if (answerTimeLeft <= 0) {
-            clearInterval(state.answerTimer);
-            // Time's up - auto wrong
-            handleTimeout();
-          }
-        }, 100);
-      }
-    }
-
-    function handleAnswer(selected, btnEl) {
-      clearInterval(state.answerTimer);
-      const q = state.roundQuestions[state.currentQuestion];
-      const isCorrect = selected === q.correctAnswer;
-
-      // Disable all options
-      document.querySelectorAll('.quiz-option').forEach(btn => {
-        btn.classList.add('disabled');
-        if (btn.textContent.slice(1) === q.correctAnswer || btn.innerHTML.includes(q.correctAnswer)) {
-          btn.classList.add('correct');
-        }
-      });
-
-      if (!isCorrect) {
-        btnEl.classList.add('wrong');
-      }
-
-      // Update score
-      if (isCorrect) {
-        state.score++;
-        state.streak++;
-        if (state.streak > state.bestStreak) state.bestStreak = state.streak;
-        phaseIndicator.className = 'phase-indicator phase-correct';
-        phaseIndicator.textContent = 'Correct!';
-      } else {
-        state.streak = 0;
-        phaseIndicator.className = 'phase-indicator phase-wrong';
-        phaseIndicator.textContent = `Wrong! Answer: ${q.correctAnswer}`;
-      }
-
-      state.roundResults.push(isCorrect);
-      state.results.push({
-        round: state.currentRound,
-        build: state.currentBuild.name,
-        question: q.question.replace(/<[^>]+>/g, ''),
-        correctAnswer: q.correctAnswer,
-        userAnswer: selected,
-        correct: isCorrect
-      });
-
-      updateStats();
-      timerBar.style.width = '0%';
-
-      // Show next button
-      if (state.currentQuestion < state.config.questionsPerRound - 1) {
-        btnNextQ.style.display = 'inline-flex';
-      } else {
-        btnNextRound.style.display = 'inline-flex';
-        btnNextRound.textContent = state.currentRound >= state.config.rounds ? 'See Results' : 'Next Round';
-      }
-    }
-
-    function handleTimeout() {
-      const q = state.roundQuestions[state.currentQuestion];
-
-      // Show correct answer
-      document.querySelectorAll('.quiz-option').forEach(btn => {
-        btn.classList.add('disabled');
-        if (btn.innerHTML.includes(q.correctAnswer)) {
-          btn.classList.add('correct');
-        }
-      });
-
-      state.streak = 0;
-      state.roundResults.push(false);
-      state.results.push({
-        round: state.currentRound,
-        build: state.currentBuild.name,
-        question: q.question.replace(/<[^>]+>/g, ''),
-        correctAnswer: q.correctAnswer,
-        userAnswer: '(Time out)',
-        correct: false
-      });
-
-      phaseIndicator.className = 'phase-indicator phase-wrong';
-      phaseIndicator.textContent = `Time's up! Answer: ${q.correctAnswer}`;
-      updateStats();
-      timerBar.style.width = '0%';
-
-      if (state.currentQuestion < state.config.questionsPerRound - 1) {
-        btnNextQ.style.display = 'inline-flex';
-      } else {
-        btnNextRound.style.display = 'inline-flex';
-        btnNextRound.textContent = state.currentRound >= state.config.rounds ? 'See Results' : 'Next Round';
-      }
-    }
-
-    function nextQuestion() {
-      state.currentQuestion++;
-      showQuestion();
-    }
-
-    function nextRound() {
-      if (state.currentRound >= state.config.rounds) {
-        showResults();
-      } else {
-        startCountdown();
-      }
-    }
-
-    function updateStats() {
-      $('stat-round').textContent = `${state.currentRound}/${state.config.rounds}`;
-      $('stat-score').textContent = state.score;
-      $('stat-streak').textContent = state.streak;
-    }
-
-    // ===== RENDER BUILD =====
-    function renderBuild(build, hidden) {
-      const armorIcons = { cloth: 'robe', leather: 'leather', plate: 'shield' };
-      const armorEmoji = { cloth: '', leather: '', plate: '' };
-
-      buildDisplay.innerHTML = `
-        <div class="build-name-bar">
-          <h3><span class="weapon-tree-badge ${build.weaponTreeClass}">${build.weaponTree}</span> ${build.name}</h3>
-          <span class="build-content-type ${build.contentClass}">${build.contentType}</span>
-        </div>
-        <div class="build-grid">
-          <div class="build-section">
-            <div class="build-section-title">Weapon & Skills</div>
-            <div class="gear-item">
-              <div class="gear-icon weapon">&#x2694;</div>
-              <div class="gear-info">
-                <div class="gear-name">${build.weapon}</div>
-                <div class="gear-detail">${build.weaponTree} Tree</div>
-              </div>
-            </div>
-            <div class="skill-slots" style="margin-top:8px;">
-              <div class="skill-slot q-skill">
-                <div class="skill-key">Q</div>
-                <div class="skill-name">${build.qSkill}</div>
-              </div>
-              <div class="skill-slot w-skill">
-                <div class="skill-key">W</div>
-                <div class="skill-name">${build.wSkill}</div>
-              </div>
-              <div class="skill-slot e-skill">
-                <div class="skill-key">E</div>
-                <div class="skill-name">${build.eSkill}</div>
-              </div>
-              <div class="skill-slot passive">
-                <div class="skill-key">Passive</div>
-                <div class="skill-name">${build.passive}</div>
-              </div>
-            </div>
-          </div>
-          <div class="build-section">
-            <div class="build-section-title">Armor</div>
-            <div class="gear-item">
-              <div class="gear-icon head">&#x1F9E5;</div>
-              <div class="gear-info">
-                <div class="gear-name">${build.head}</div>
-                <div class="gear-detail">${capitalize(build.headType)}</div>
-              </div>
-            </div>
-            <div class="gear-item">
-              <div class="gear-icon chest">&#x1F9BA;</div>
-              <div class="gear-info">
-                <div class="gear-name">${build.chest}</div>
-                <div class="gear-detail">${capitalize(build.chestType)}</div>
-              </div>
-            </div>
-            <div class="gear-item">
-              <div class="gear-icon shoes">&#x1F97F;</div>
-              <div class="gear-info">
-                <div class="gear-name">${build.shoes}</div>
-                <div class="gear-detail">${capitalize(build.shoesType)}</div>
-              </div>
-            </div>
-          </div>
-          <div class="build-section">
-            <div class="build-section-title">Consumables & Range</div>
-            <div class="gear-item">
-              <div class="gear-icon cape">&#x1FA94;</div>
-              <div class="gear-info">
-                <div class="gear-name">${build.cape}</div>
-                <div class="gear-detail">Cape</div>
-              </div>
-            </div>
-            <div class="gear-item">
-              <div class="gear-icon potion">&#x1F9EA;</div>
-              <div class="gear-info">
-                <div class="gear-name">${build.potion}</div>
-                <div class="gear-detail">Potion</div>
-              </div>
-            </div>
-            <div class="gear-item">
-              <div class="gear-icon food">&#x1F356;</div>
-              <div class="gear-info">
-                <div class="gear-name">${build.food}</div>
-                <div class="gear-detail">Food</div>
-              </div>
-            </div>
-            <div style="margin-top:10px;">
-              <span class="range-badge ${build.rangeClass}">&#x1F3AF; ${build.attackRange}</span>
-            </div>
-          </div>
-          <div class="build-section">
-            <div class="build-section-title">Mount</div>
-            <div class="gear-item">
-              <div class="gear-icon mount">&#x1F40E;</div>
-              <div class="gear-info">
-                <div class="gear-name">${build.mount}</div>
-                <div class="gear-detail">Mount</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      `;
-
-      if (hidden) buildDisplay.classList.add('hidden-info');
-    }
-
-    function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
-
-    // ===== RESULTS =====
-    function showResults() {
-      clearInterval(state.timer);
-      clearInterval(state.answerTimer);
-      showScreen(screenResults);
-
-      const totalQuestions = state.results.length;
-      const correctCount = state.results.filter(r => r.correct).length;
-      const pct = Math.round((correctCount / totalQuestions) * 100);
-
-      let grade, gradeClass;
-      if (pct >= 90) { grade = 'S'; gradeClass = 'grade-s'; }
-      else if (pct >= 75) { grade = 'A'; gradeClass = 'grade-a'; }
-      else if (pct >= 60) { grade = 'B'; gradeClass = 'grade-b'; }
-      else if (pct >= 40) { grade = 'C'; gradeClass = 'grade-c'; }
-      else { grade = 'D'; gradeClass = 'grade-d'; }
-
-      let breakdownHTML = state.results.map(r => `
-        <div class="breakdown-item">
-          <div class="breakdown-icon ${r.correct ? 'correct-icon' : 'wrong-icon'}">
-            ${r.correct ? '&#10003;' : '&#10007;'}
-          </div>
-          <div class="breakdown-text">
-            <div class="breakdown-question">R${r.round}: ${r.build}</div>
-            <div class="breakdown-answer">${r.question} &mdash; ${r.correct ? r.correctAnswer : `You: ${r.userAnswer} | Correct: ${r.correctAnswer}`}</div>
-          </div>
-        </div>
-      `).join('');
-
-      $('results-panel').innerHTML = `
-        <div class="results-title">Training Complete</div>
-        <div class="results-grade ${gradeClass}">${grade}</div>
-        <div style="color:var(--text-secondary); margin-bottom:10px;">${pct}% Accuracy</div>
-        <div class="results-stats">
-          <div class="results-stat">
-            <div class="rs-value" style="color:var(--accent-green)">${correctCount}/${totalQuestions}</div>
-            <div class="rs-label">Correct</div>
-          </div>
-          <div class="results-stat">
-            <div class="rs-value" style="color:var(--accent-gold)">${state.bestStreak}</div>
-            <div class="rs-label">Best Streak</div>
-          </div>
-          <div class="results-stat">
-            <div class="rs-value" style="color:var(--accent-blue)">${state.config.rounds}</div>
-            <div class="rs-label">Rounds</div>
-          </div>
-        </div>
-        <div class="results-breakdown">
-          <h4>Answer Breakdown</h4>
-          ${breakdownHTML}
-        </div>
-        <div class="results-actions">
-          <button class="btn btn-primary" onclick="restartSameConfig()">Train Again</button>
-          <button class="btn btn-secondary" onclick="backToConfig()">Change Settings</button>
-        </div>
-      `;
-    }
-
-    function restartSameConfig() {
-      startTraining();
-    }
-
-    function backToConfig() {
-      showScreen(screenConfig);
-    }
-
-    function quitTraining() {
-      clearInterval(state.timer);
-      clearInterval(state.answerTimer);
-      if (state.results.length > 0) {
-        showResults();
-      } else {
-        showScreen(screenConfig);
-      }
-    }
-
-    // ===== KEYBOARD SUPPORT =====
-    document.addEventListener('keydown', (e) => {
-      if (state.phase === 'answer') {
-        const keyMap = { 'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'f': 5 };
-        const key = e.key.toLowerCase();
-        if (keyMap[key] !== undefined) {
-          const options = document.querySelectorAll('.quiz-option:not(.disabled)');
-          if (options[keyMap[key]]) {
-            options[keyMap[key]].click();
-          }
-        }
-      }
-
-      if (e.key === 'Enter') {
-        if (btnNextQ.style.display !== 'none' && btnNextQ.style.display !== '') btnNextQ.click();
-        else if (btnNextRound.style.display !== 'none' && btnNextRound.style.display !== '') btnNextRound.click();
-      }
     });
+    const sameTreeShuffled = sameTreeSkills.filter(d=>d!==correctDesc).sort(()=>Math.random()-.5);
+    distractors = [...sameTreeShuffled.slice(0,numOpts-1)];
+    // Fill remaining if needed
+    let idx=0;
+    while(distractors.length<numOpts-1 && idx<shuffledDescs.length) {
+      if(!distractors.includes(shuffledDescs[idx])) distractors.push(shuffledDescs[idx]);
+      idx++;
+    }
+  } else {
+    distractors = shuffledDescs.slice(0,numOpts-1);
+  }
 
-    // ===== INIT =====
-    setupConfig();
-  </script>
+  const options = [correctDesc, ...distractors].sort(()=>Math.random()-.5);
+  return { slot:pick.slot, name:pick.name, correctDesc, options };
+}
+
+function renderQuestion() {
+  const q = S.question;
+  $('qq').innerHTML = `What does <span class="qskill"><img src="${spellImg(q.name)}" alt="" onerror="this.style.display='none'">${q.name}</span> do?`;
+
+  const keys = ['A','B','C','D'];
+  $('qo').innerHTML = '';
+  q.options.forEach((opt,i) => {
+    const btn = document.createElement('button');
+    btn.className = 'qob';
+    btn.innerHTML = `<span class="okk">${keys[i]}</span>${opt}`;
+    btn.addEventListener('click', () => handleAnswer(opt, btn));
+    $('qo').appendChild(btn);
+  });
+}
+
+function handleAnswer(selected, btnEl) {
+  clearInterval(S.atimer);
+  const q = S.question;
+  const isCorrect = selected === q.correctDesc;
+
+  document.querySelectorAll('.qob').forEach(btn => {
+    btn.classList.add('dis');
+    if(btn.textContent.includes(q.correctDesc) || btn.innerHTML.includes(q.correctDesc.substring(0,30))) {
+      // Mark correct option
+    }
+  });
+
+  // Find and mark correct
+  document.querySelectorAll('.qob').forEach(btn => {
+    const text = btn.textContent.substring(1); // remove key letter
+    if(text === q.correctDesc) btn.classList.add('ok');
+  });
+
+  if(!isCorrect) btnEl.classList.add('no');
+  else {
+    // Also mark the selected one correct if it matches
+    const text = btnEl.textContent.substring(1);
+    if(text === q.correctDesc) btnEl.classList.add('ok');
+  }
+
+  if(isCorrect) {
+    S.score++; S.streak++; if(S.streak>S.best) S.best=S.streak;
+    $('phase').className='phase ph-c'; $('phase').textContent='Correct!';
+  } else {
+    S.streak=0;
+    $('phase').className='phase ph-w'; $('phase').textContent='Wrong!';
+  }
+
+  S.results.push({ round:S.round, build:S.build.name, skillName:q.name, slot:q.slot, correct:isCorrect, userDesc:selected.substring(0,60), correctDesc:q.correctDesc.substring(0,60) });
+  updStats(); $('tbar').style.width='0%';
+
+  $('btn-next').style.display='inline-flex';
+  $('btn-next').textContent = S.round>=S.cfg.rounds ? 'See Results' : 'Next Round';
+}
+
+function handleTimeout() {
+  const q = S.question;
+  document.querySelectorAll('.qob').forEach(btn => {
+    btn.classList.add('dis');
+    const text = btn.textContent.substring(1);
+    if(text === q.correctDesc) btn.classList.add('ok');
+  });
+  S.streak=0;
+  S.results.push({ round:S.round, build:S.build.name, skillName:q.name, slot:q.slot, correct:false, userDesc:'(Time out)', correctDesc:q.correctDesc.substring(0,60) });
+  $('phase').className='phase ph-w'; $('phase').textContent="Time's up!";
+  updStats(); $('tbar').style.width='0%';
+  $('btn-next').style.display='inline-flex';
+  $('btn-next').textContent = S.round>=S.cfg.rounds ? 'See Results' : 'Next Round';
+}
+
+function nextRound() {
+  if(S.round>=S.cfg.rounds) showResults();
+  else countdown();
+}
+
+function updStats() {
+  $('st-rn').textContent=`${S.round}/${S.cfg.rounds}`;
+  $('st-sc').textContent=S.score;
+  $('st-sk').textContent=S.streak;
+}
+
+function renderBuild(b, hidden) {
+  const imgTag = (id,cls) => `<div class="gi ${cls}"><img src="${itemImg(id)}" alt="" loading="lazy" onerror="this.style.display='none'"></div>`;
+  const cap = s => s.charAt(0).toUpperCase()+s.slice(1);
+  $('bc').innerHTML = `
+    <div class="bc-top"><h3><span class="tb ${b.tc}">${b.tree}</span> ${b.weapon}</h3><span class="bc-ct ${b.cc}">${b.ct}</span></div>
+    <div class="bsec">
+      <div class="bsec-t">Weapon & Skills</div>
+      <div class="gr">${imgTag(ITEM_IDS[b.weapon],'wpn')}<div class="ginfo"><div class="gn">${b.weapon}</div><div class="gd">${b.tree} Tree</div></div><span class="rng ${b.rc}">${b.range}</span></div>
+      <div class="sk-row">
+        <div class="sk sk-q"><div class="sk-k">Q</div><div class="sk-ic"><img src="${spellImg(b.qSkill)}" alt="" loading="lazy" onerror="this.style.display='none'"></div><div class="sk-n">${b.qSkill}</div></div>
+        <div class="sk sk-w"><div class="sk-k">W</div><div class="sk-ic"><img src="${spellImg(b.wSkill)}" alt="" loading="lazy" onerror="this.style.display='none'"></div><div class="sk-n">${b.wSkill}</div></div>
+        <div class="sk sk-e"><div class="sk-k">E</div><div class="sk-ic"><img src="${spellImg(b.eSkill)}" alt="" loading="lazy" onerror="this.style.display='none'"></div><div class="sk-n">${b.eSkill}</div></div>
+        <div class="sk sk-p"><div class="sk-k">P</div><div class="sk-n">${b.passive}</div></div>
+      </div>
+    </div>
+    <div class="bsec">
+      <div class="bsec-t">Armor</div>
+      <div class="gr">${imgTag(ITEM_IDS[b.head],'hd')}<div class="ginfo"><div class="gn">${b.head}</div><div class="gd">${cap(b.ht)}</div></div></div>
+      <div class="gr">${imgTag(ITEM_IDS[b.chest],'ch')}<div class="ginfo"><div class="gn">${b.chest}</div><div class="gd">${cap(b.cht)}</div></div></div>
+      <div class="gr">${imgTag(ITEM_IDS[b.shoes],'sh')}<div class="ginfo"><div class="gn">${b.shoes}</div><div class="gd">${cap(b.st)}</div></div></div>
+    </div>
+    <div class="bsec">
+      <div class="bsec-t">Consumables</div>
+      <div class="gr">${imgTag(ITEM_IDS[b.cape],'cp')}<div class="ginfo"><div class="gn">${b.cape}</div><div class="gd">Cape</div></div></div>
+      <div class="gr">${imgTag(ITEM_IDS[b.potion],'pt')}<div class="ginfo"><div class="gn">${b.potion}</div><div class="gd">Potion</div></div></div>
+      <div class="gr">${imgTag(ITEM_IDS[b.food],'fd')}<div class="ginfo"><div class="gn">${b.food}</div><div class="gd">Food</div></div></div>
+    </div>
+    <div class="bsec">
+      <div class="bsec-t">Mount</div>
+      <div class="gr">${imgTag(ITEM_IDS[b.mount],'mt')}<div class="ginfo"><div class="gn">${b.mount}</div><div class="gd">Mount</div></div></div>
+    </div>`;
+}
+
+function showResults() {
+  clearInterval(S.timer); clearInterval(S.atimer);
+  showScreen('s-res');
+  const total=S.results.length, correct=S.results.filter(r=>r.correct).length;
+  const pct=Math.round(correct/total*100);
+  let grade,gc;
+  if(pct>=90){grade='S';gc='gs';}else if(pct>=75){grade='A';gc='ga';}else if(pct>=60){grade='B';gc='gb';}else if(pct>=40){grade='C';gc='gc';}else{grade='D';gc='gdg';}
+
+  const bd = S.results.map(r=>`
+    <div class="bi">
+      <div class="bic ${r.correct?'cic':'wic'}">${r.correct?'&#10003;':'&#10007;'}</div>
+      <div class="bit"><div class="biq">R${r.round}: ${r.build}</div><div class="bia">What does ${r.skillName} do? ${r.correct?'':'Correct: '+r.correctDesc}</div></div>
+    </div>`).join('');
+
+  $('rp').innerHTML = `
+    <div class="rp-title">Training Complete</div>
+    <div class="rp-grade ${gc}">${grade}</div>
+    <div style="color:var(--t2);margin-bottom:8px">${pct}% Accuracy</div>
+    <div class="rs">
+      <div class="rsi"><div class="rv" style="color:var(--green)">${correct}/${total}</div><div class="rl">Correct</div></div>
+      <div class="rsi"><div class="rv" style="color:var(--gold)">${S.best}</div><div class="rl">Best Streak</div></div>
+      <div class="rsi"><div class="rv" style="color:var(--blue)">${S.cfg.rounds}</div><div class="rl">Rounds</div></div>
+    </div>
+    <div class="rb"><h4>Breakdown</h4>${bd}</div>
+    <div class="ra"><button class="btn btn-p" onclick="startTraining()">Again</button><button class="btn btn-s" onclick="showScreen('s-cfg')">Settings</button></div>`;
+}
+
+function quit() {
+  clearInterval(S.timer); clearInterval(S.atimer);
+  S.results.length>0 ? showResults() : showScreen('s-cfg');
+}
+
+init();
+</script>
 </body>
 </html>
